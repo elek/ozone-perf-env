@@ -1,0 +1,49 @@
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: promtail
+  labels:
+    app.kubernetes.io/name: loki
+    app.kubernetes.io/component: promtail
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: loki
+      app.kubernetes.io/component: promtail
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: loki
+        app.kubernetes.io/component: promtail
+    spec:
+      serviceAccount: promtail-serviceaccount
+      volumes:
+      - name: docker
+        hostPath:
+          path: /var/lib/docker/containers
+      - name: pods
+        hostPath:
+          path: /var/log/pods
+      - name: promtail-config
+        configMap:
+          name: promtail-config
+      containers:
+      - name: promtail
+        image: grafana/promtail
+        args:
+        - -config.file=/etc/promtail/config.yaml
+        env:
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        volumeMounts:
+        - name: docker
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+        - name: pods
+          mountPath: /var/log/pods
+          readOnly: true
+        - name: promtail-config
+          mountPath: /etc/promtail
