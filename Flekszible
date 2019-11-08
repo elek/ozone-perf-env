@@ -1,6 +1,6 @@
 source:
-  - path: https://github.com/flokkr/infra-flekszible
-  - path: https://github.com/flokkr/ozone-flekszible
+  - url: https://github.com/flokkr/infra-flekszible
+  - url: https://github.com/flokkr/ozone-flekszible
 import:
     - path: ozone
       transformations:
