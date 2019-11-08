@@ -4,7 +4,8 @@ kind: Deployment
 metadata:
   name: freon
   labels:
-    app.kubernetes.io/component: ozone
+    app: ozone
+    component: freon
 spec:
   replicas: 1
   selector:
@@ -23,7 +24,7 @@ spec:
     spec:
       containers:
       - name: freon
-        image: elek/ozone:20191108-1
+        image: elek/ozone:20191108-2
         args:
         - ozone
         - freon

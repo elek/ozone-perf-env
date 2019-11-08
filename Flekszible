@@ -4,11 +4,8 @@ source:
 import:
     - path: ozone
       transformations:
-         - type: Image
-           image: elek/ozone:elek/ozone:20191108-1
          - type: ozone/emptydir
          - type: ozone/prometheus
-         - type: DaemonToStatefulset
          - type: PublishStatefulSet
          - type: ozone/devtracing
          - type: ozone/profiler
@@ -48,8 +45,6 @@ import:
     - path: ozone/freon
       destination: freon
       transformations:
-         - type: Image
-           image: elek/ozone:20191108-1
          - type: ozone/devtracing
          - type: Replace
            path: 
@@ -82,3 +77,9 @@ transformations:
       - data
     value:
       OZONE-SITE.XML_hdds.prometheus.endpoint.enabled: "true"
+  - type: image
+    image: elek/ozone:20191108-2
+    trigger:
+       metadata:
+         labels:
+           app: ozone
