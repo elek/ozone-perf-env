@@ -63,6 +63,8 @@ import:
 #      destination: monitoring
     - path: registry
       destination: registry
+      transformations:
+        - type: PublishService
 #    - path: sleep
 #      transformations:
 #      - type: image
@@ -78,7 +80,7 @@ transformations:
     value:
       OZONE-SITE.XML_hdds.prometheus.endpoint.enabled: "true"
   - type: image
-    image: elek/ozone:20191108-2
+    image: elek/ozone:20191108-3
     trigger:
        metadata:
          labels:

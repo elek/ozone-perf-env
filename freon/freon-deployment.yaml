@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: freon
-        image: elek/ozone:20191108-2
+        image: elek/ozone:20191108-3
         args:
         - ozone
         - freon

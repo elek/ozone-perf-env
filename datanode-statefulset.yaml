@@ -37,7 +37,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: datanode
-        image: elek/ozone:20191108-2
+        image: elek/ozone:20191108-3
         args:
         - ozone
         - datanode
