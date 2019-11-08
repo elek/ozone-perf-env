@@ -5,7 +5,7 @@ import:
     - path: ozone
       transformations:
          - type: Image
-           image: elek/ozone:20191030-1
+           image: elek/ozone:elek/ozone:20191108-1
          - type: ozone/emptydir
          - type: ozone/prometheus
          - type: DaemonToStatefulset
@@ -43,14 +43,35 @@ import:
       destination: monitoring
       transformations:
         - type: PublishService
+    - path: node-exporter
+      destination: monitoring
     - path: ozone/freon
       destination: freon
       transformations:
          - type: Image
-           image: elek/ozone:20191030-1
+           image: elek/ozone:20191108-1
          - type: ozone/devtracing
-    - path: loki
-      destination: monitoring
+         - type: Replace
+           path: 
+             - spec
+             - template
+             - spec
+             - containers
+             - freon
+             - args
+           value:
+             - ozone
+             - freon
+             - dcg
+             - -n10000000
+#    - path: loki
+#      destination: monitoring
+    - path: registry
+      destination: registry
+#    - path: sleep
+#      transformations:
+#      - type: image
+#        image: elek/ozone-build:20191106-1
 transformations:
   - type: Namespace
   - type: Add

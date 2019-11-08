@@ -24,7 +24,7 @@ spec:
     spec:
       initContainers:
       - name: init
-        image: elek/ozone:20191030-1
+        image: elek/ozone:elek/ozone:20191108-1
         args:
         - ozone
         - om
@@ -40,7 +40,7 @@ spec:
           mountPath: /data
       containers:
       - name: om
-        image: elek/ozone:20191030-1
+        image: elek/ozone:elek/ozone:20191108-1
         args:
         - ozone
         - om

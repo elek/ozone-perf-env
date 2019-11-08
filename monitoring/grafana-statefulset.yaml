@@ -48,9 +48,6 @@ spec:
         - name: prometheus-datasource-provisioning
           mountPath: /etc/grafana/provisioning/datasources/prometheus.yaml
           subPath: prometheus.yaml
-        - name: loki-datasource-provisioning
-          mountPath: /etc/grafana/provisioning/datasources/loki.yaml
-          subPath: loki.yaml
       volumes:
       - name: dashboard-provisioning
         configMap:
@@ -61,6 +58,3 @@ spec:
       - name: prometheus-datasource-provisioning
         configMap:
           name: prometheus-grafana-datasource
-      - name: loki-datasource-provisioning
-        configMap:
-          name: loki-grafana-datasource

@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: s3g
-        image: elek/ozone:20191030-1
+        image: elek/ozone:elek/ozone:20191108-1
         args:
         - ozone
         - s3g

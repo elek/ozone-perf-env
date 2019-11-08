@@ -23,11 +23,10 @@ spec:
     spec:
       containers:
       - name: freon
-        image: elek/ozone:20191030-1
+        image: elek/ozone:20191108-1
         args:
         - ozone
         - freon
-        - --server
         - dcg
         - -n10000000
         env:
