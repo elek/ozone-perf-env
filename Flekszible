@@ -26,49 +26,6 @@ import:
               kind: Statefulset
               metadata:
                   name: datanode
-    - path: jaeger
-      destination: monitoring
-      transformations:
-      - type: PublishStatefulSet
-    - path: grafana
-      transformations:
-      - type: PublishService
-      - type: grafana/install-dashboard
-        configmap: ozone-dashboard
-      destination: monitoring
-    - path: prometheus
-      destination: monitoring
-      transformations:
-        - type: PublishService
-    - path: node-exporter
-      destination: monitoring
-    - path: ozone/freon
-      destination: freon
-      transformations:
-         - type: ozone/devtracing
-         - type: Replace
-           path: 
-             - spec
-             - template
-             - spec
-             - containers
-             - freon
-             - args
-           value:
-             - ozone
-             - freon
-             - dcg
-             - -n10000000
-#    - path: loki
-#      destination: monitoring
-    - path: registry
-      destination: registry
-      transformations:
-        - type: PublishService
-#    - path: sleep
-#      transformations:
-#      - type: image
-#        image: elek/ozone-build:20191106-1
 transformations:
   - type: Namespace
   - type: Add
