@@ -1,0 +1,44 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ozone-s3g
+  labels:
+    app: ozone
+    component: s3g
+spec:
+  selector:
+    matchLabels:
+      app: ozone
+      component: s3g
+  serviceName: ozone-s3g
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ozone
+        component: s3g
+    spec:
+      containers:
+      - name: s3g
+        image: elek/ozonedev:20200219-1
+        args:
+        - ozone
+        - s3g
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        envFrom:
+        - configMapRef:
+            name: ozone-config
+        env:
+        - name: JAEGER_SAMPLER_TYPE
+          value: probabilistic
+        - name: JAEGER_SAMPLER_PARAM
+          value: "0.01"
+        - name: JAEGER_AGENT_HOST
+          value: jaeger-0.jaeger
+      volumes:
+      - name: data
+        emptyDir:
+          medium: Memory
