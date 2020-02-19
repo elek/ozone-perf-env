@@ -40,7 +40,7 @@ spec:
         args:
         - ozone
         - freon
-        - dcg
+        - ockg
         - -n10000000
         env:
         - name: JAEGER_SAMPLER_TYPE

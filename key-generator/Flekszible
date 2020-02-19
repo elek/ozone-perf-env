@@ -57,7 +57,7 @@ import:
            value:
              - ozone
              - freon
-             - dcg
+             - ockg
              - -n10000000
 transformations:
   - type: Namespace
