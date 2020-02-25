@@ -1,0 +1,61 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ozone-scm
+  labels:
+    app: ozone
+    component: scm
+spec:
+  selector:
+    matchLabels:
+      app: ozone
+      component: scm
+  serviceName: ozone-scm
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ozone
+        component: scm
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9876"
+        prometheus.io/path: /prom
+    spec:
+      initContainers:
+      - name: init
+        image: elek/ozonedev:20200220-1
+        args:
+        - ozone
+        - scm
+        - --init
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        envFrom:
+        - configMapRef:
+            name: ozone-config
+      containers:
+      - name: scm
+        image: elek/ozonedev:20200220-1
+        args:
+        - ozone
+        - scm
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        envFrom:
+        - configMapRef:
+            name: ozone-config
+        env:
+        - name: JAEGER_SAMPLER_TYPE
+          value: probabilistic
+        - name: JAEGER_SAMPLER_PARAM
+          value: "0.01"
+        - name: JAEGER_AGENT_HOST
+          value: jaeger-0.jaeger
+      volumes:
+      - name: data
+        emptyDir:
+          medium: Memory

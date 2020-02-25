@@ -1,0 +1,128 @@
+source:
+  - url: git::https://github.com/flokkr/infra-flekszible.git
+  - url: git::https://github.com/elek/ozone-flekszible.git
+import:
+    - path: ozone
+      transformations:
+         - type: change
+           trigger:
+              metadata:
+                 name: config
+           path:
+              - data
+              - OZONE-SITE.XML_hdds.datanode.dir
+           replacement: /storage
+         - type: add
+           trigger:
+              metadata:
+                 name: datanode
+           path: 
+             - spec
+             - template
+             - spec 
+             - containers
+             - .*
+             - volumeMounts
+           value: 
+             - name: storage
+               mountPath: /storage
+         - type: add
+           trigger:
+              metadata:
+                 name: datanode
+           path: 
+             - spec
+             - template
+             - spec 
+             - volumes
+           value: 
+             - name: storage
+               hostPath:
+                  path: /storage
+                  type: Directory
+         - type: ozone/profiler
+         - type: PublishStatefulSet
+         - type: ozone/devtracing
+         - type: ozone/profiler
+         - type: Change
+           path: 
+             - spec
+             - replicas
+           trigger:
+             metadata:
+                name: datanode
+           replacement: 3
+         - type: Add
+           path:
+             - spec
+           value:
+               podManagementPolicy: Parallel
+           trigger:
+              kind: Statefulset
+              metadata:
+                  name: datanode
+         - type: add
+           trigger:
+              metadata:
+                 name: config
+           path:
+             - data
+           value:
+              OZONE-SITE.XML_ozone.scm.container.size: 1G
+    - path: jaeger
+      destination: monitoring
+      transformations:
+        - type: PublishStatefulSet
+    - path: grafana
+      transformations:
+      - type: PublishService
+      destination: monitoring
+    - path: prometheus
+      destination: monitoring
+      transformations:
+        - type: PublishService
+    - path: node-exporter
+      destination: monitoring
+    - path: ozone/freon
+      destination: freon
+      transformations:
+         - type: ozone/devtracing
+         - type: Replace
+           path: 
+             - spec
+             - template
+             - spec
+             - containers
+             - freon
+             - args
+           value:
+             - ozone
+             - freon
+             - dcg
+             - -n10000000
+#    - path: loki
+#      destination: monitoring
+    - path: registry
+      destination: registry
+      transformations:
+        - type: PublishService
+#    - path: sleep
+#      transformations:
+#      - type: image
+#        image: elek/ozone-build:20191106-1
+transformations:
+  - type: Namespace
+  - type: Add
+    trigger:
+      metadata:
+          name: config
+    path:
+      - data
+    value:
+      OZONE-SITE.XML_hdds.prometheus.endpoint.enabled: "true"
+  - type: image
+    image: localhost:30453/elek/ozone:dev
+    trigger:
+       metadata:
+         labels:
+           app: ozone

@@ -1,0 +1,69 @@
+source:
+  - url: git::https://github.com/flokkr/infra-flekszible.git
+  - url: git::https://github.com/elek/ozone-flekszible.git
+import:
+    - path: ozone
+      transformations:
+         - type: ozone/profiler
+         - type: PublishStatefulSet
+         - type: ozone/devtracing
+         - type: Change
+           path: 
+             - spec
+             - replicas
+           trigger:
+             metadata:
+                name: ozone-datanode
+           replacement: 3
+         - type: Add
+           path:
+             - spec
+           value:
+               podManagementPolicy: Parallel
+           trigger:
+              kind: Statefulset
+              metadata:
+                  name: ozone-datanode
+         - type: add
+           trigger:
+              metadata:
+                 name: ozone-config
+           path:
+             - data
+           value:
+              OZONE-SITE.XML_ozone.scm.container.size: 1G
+         - type: add
+           path:
+             - spec
+             - template
+             - spec
+             - volumes
+             - data
+             - emptyDir
+           value:
+             medium: Memory
+    - path: ozone/freon
+      destination: freon
+      transformations:
+         - type: ozone/devtracing
+         - type: Replace
+           path:
+             - spec
+             - template
+             - spec
+             - containers
+             - ozone
+             - args
+           value:
+             - ozone
+             - freon
+             - dcg
+             - -n10000000
+transformations:
+  - type: Namespace
+  - type: image
+    image: elek/ozonedev:20200220-1
+    trigger:
+       metadata:
+         labels:
+           app: ozone
