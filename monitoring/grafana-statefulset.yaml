@@ -43,18 +43,18 @@ spec:
         volumeMounts:
         - name: dashboard-provisioning
           mountPath: /etc/grafana/provisioning/dashboards
-        - name: ozone-dashboard
-          mountPath: /etc/ozone-dashboard
         - name: prometheus-datasource-provisioning
           mountPath: /etc/grafana/provisioning/datasources/prometheus.yaml
           subPath: prometheus.yaml
+        - name: nodeexporter-grafana-dashboard
+          mountPath: /etc/nodeexporter-grafana-dashboard
       volumes:
       - name: dashboard-provisioning
         configMap:
           name: grafana-dashboards
-      - name: ozone-dashboard
-        configMap:
-          name: ozone-dashboard
       - name: prometheus-datasource-provisioning
         configMap:
           name: prometheus-grafana-datasource
+      - name: nodeexporter-grafana-dashboard
+        configMap:
+          name: nodeexporter-grafana-dashboard
