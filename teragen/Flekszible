@@ -1,0 +1,142 @@
+import:
+  - path: ozone/freon
+    destination: freon-key-generator
+    transformations:
+    - type: image
+      image: elek/ozone-dev:980b7cfb7
+    - type: replace
+      path: 
+       - spec
+       - template
+       - spec
+       - containers
+       - ozone
+       - args
+      value:
+        - ozone
+        - freon
+        - --server
+        - ockg
+        - -n10000
+  - path: ozone/freon
+    destination: freon-chunk-generator
+    transformations:
+    - type: image
+      image: elek/ozone-dev:980b7cfb7
+    - type: replace
+      path: 
+       - spec
+       - template
+       - spec
+       - containers
+       - ozone
+       - args
+      value:
+        - ozone
+        - freon
+        - --server
+        - dcg
+        - -n10000
+  - path: yarn
+    destination: yarn
+    transformations:
+    - type: ozone/ozonefs
+      image: elek/ozone-dev:980b7cfb7
+    - type: PublishService
+    - type: add
+      path:
+       - spec
+       - template
+       - spec
+      value:
+         nodeSelector:
+            partition: lower
+  - path: ozone
+    destination: ozone
+    transformations:
+    - type: remove
+      path:
+        - data
+        - CORE-SITE.XML_fs.defaultFS
+    - type: image
+      image: elek/ozone-dev:980b7cfb7
+    - type: add
+      trigger:
+        metadata:
+          name: ozone-datanode
+      path:
+        - spec
+        - template
+        - spec
+        - containers
+        - datanode
+        - volumeMounts
+      value:
+        - name: storage
+          mountPath: /data/storage
+    - type: add
+      trigger:
+        metadata:
+          name: ozone-datanode
+      path:
+        - spec
+        - template
+        - spec
+        - volumes
+      value:
+         - name: storage
+           hostPath:
+             path: /data/1/ozone
+             type: Directory
+    - type: add
+      trigger:
+        metadata:
+          name: ozone-datanode
+      path:
+        - spec
+        - template
+        - spec
+        - volumes
+        - data
+        - emptyDir
+      value:
+        medium: Memory
+    - type: add
+      path:
+        - spec
+        - template
+        - spec
+      value:
+        nodeSelector:
+           partition: upper
+  - path: hdfs
+    destination: hdfs
+    transformations:
+    - type: remove
+      path:
+        - spec
+        - template
+        - spec
+        - volumes
+        - data
+        - emptyDir
+    - type: add
+      path:
+        - spec
+        - template
+        - spec
+        - volumes
+        - data
+      value:
+         hostPath:
+            path: /data/1/hdfs
+            type: Directory
+    - type: add
+      path:
+        - spec
+        - template
+        - spec
+      value:
+        nodeSelector:
+           partition: upper
+
