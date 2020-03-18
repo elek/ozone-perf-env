@@ -1,11 +1,21 @@
+#!/usr/bin/env bash
 
-MR_EXAMPLES_JAR=
+set -x
 
-yarn jar $MR_EXAMPLES_JAR teragen \
+
+ROWS=$(numfmt --from=auto --to-unit=100 100G)
+OUTPUT_DIR=teragen-$(shuf -i 1000-2000 -n 1)
+
+OUTPUT_DIR=o3fs://bucket1.vol1.ozone-om-0.ozone-om/$OUTPUT_DIR
+
+MR_EXAMPLES_JAR=/opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.1.jar
+
+for i in `seq 0 5`; do
+
+time yarn jar $MR_EXAMPLES_JAR teragen \
 -Dmapreduce.map.log.level=INFO \
 -Dmapreduce.reduce.log.level=INFO \
 -Dyarn.app.mapreduce.am.log.level=INFO \
--Dio.file.buffer.size=131072 \
 -Dmapreduce.map.cpu.vcores=1 \
 -Dmapreduce.map.java.opts=-Xmx1536m \
 -Dmapreduce.map.maxattempts=1 \
@@ -16,8 +26,14 @@ yarn jar $MR_EXAMPLES_JAR teragen \
 -Dmapreduce.reduce.java.opts=-Xmx1536m \
 -Dmapreduce.reduce.maxattempts=1 \
 -Dmapreduce.reduce.memory.mb=2048 \
--Dmapreduce.task.io.sort.factor=100 \
--Dmapreduce.task.io.sort.mb=384 \
 -Dyarn.app.mapreduce.am.command.opts=-Xmx768m \
 -Dyarn.app.mapreduce.am.resource.mb=1024 \
--Dmapred.map.tasks=92
+-Dmapreduce.task.io.sort.factor=100 \
+-Dmapreduce.task.io.sort.mb=384 \
+-Dmapred.map.tasks=92 \
+-Dio.file.buffer.size=131072 \
+$ROWS $OUTPUT_DIR
+
+done
+
+sleep 10000000

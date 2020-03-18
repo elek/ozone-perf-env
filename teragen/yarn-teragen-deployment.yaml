@@ -1,33 +1,26 @@
 
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: yarn-timeline
+  name: yarn-teragen
   labels:
     app: yarn
-    component: timeline
+    component: teragen
 spec:
-  serviceName: yarn-timeline
   replicas: 1
-  updateStrategy:
-    type: RollingUpdate
-  podManagementPolicy: Parallel
   selector:
     matchLabels:
       app: yarn
-      component: timeline
+      component: teragen
   template:
     metadata:
       labels:
         app: yarn
-        component: timeline
+        component: teragen
     spec:
       containers:
-      - name: yarn-timeline
+      - name: teragen
         image: flokkr/hadoop
-        args:
-        - yarn
-        - timelineserver
         envFrom:
         - configMapRef:
             name: yarn-config
@@ -36,18 +29,18 @@ spec:
         - configMapRef:
             name: hdfs-config
         volumeMounts:
-        - name: data
-          mountPath: /data
         - name: ozonefs
           mountPath: /opt/ozonefs
+        - name: script
+          mountPath: /opt/script/teragen.sh
+          subPath: teragen.sh
         env:
         - name: HADOOP_CLASSPATH
           value: /opt/ozonefs/hadoop-ozone-filesystem-lib-current-0.5.0-SNAPSHOT.jar
-      volumes:
-      - name: data
-        emptyDir: {}
-      - name: ozonefs
-        emptyDir: {}
+        args:
+        - /opt/script/teragen.sh
+      nodeSelector:
+        group: b
       initContainers:
       - name: ozonefscopy
         image: elek/ozone-dev:49edf55c8
@@ -59,5 +52,10 @@ spec:
         volumeMounts:
         - name: ozonefs
           mountPath: /opt/ozonefs
-      nodeSelector:
-        group: b
+      volumes:
+      - name: ozonefs
+        emptyDir: {}
+      - name: script
+        configMap:
+          name: teragen-testscript
+          defaultMode: 493

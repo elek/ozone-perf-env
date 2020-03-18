@@ -41,7 +41,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: datanode
-        image: elek/ozone-dev:980b7cfb7
+        image: elek/ozone-dev:49edf55c8
         args:
         - ozone
         - datanode
@@ -62,4 +62,4 @@ spec:
           path: /data/1/ozone
           type: Directory
       nodeSelector:
-        partition: upper
+        group: a

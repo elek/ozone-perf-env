@@ -52,4 +52,4 @@ spec:
           path: /data/1/hdfs
           type: Directory
       nodeSelector:
-        partition: upper
+        group: a

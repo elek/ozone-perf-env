@@ -20,46 +20,8 @@ spec:
       containers:
       - name: teragen
         image: flokkr/hadoop
-        args:
-        - /opt/tester/teragen.sh
         envFrom:
         - configMapRef:
             name: yarn-config
-        - configMapRef:
-            name: ozone-config
-        - configMapRef:
-            name: hdfs-config
-        volumeMounts:
-        - name: ozonefs
-          mountPath: /opt/ozonefs
-        - name: script
-          mountPath: /opt/tester/teragen.sh
-          subPath: teragen.sh
-        env:
-        - name: HADOOP_CLASSPATH
-          value: /opt/ozonefs/hadoop-ozone-filesystem-lib-current-0.5.0-SNAPSHOT.jar
-      volumes:
-      - name: config
-        configMap:
-          name: yarn-config
-      - name: data
-        emptyDir: {}
-      - name: ozonefs
-        emptyDir: {}
-      - name: script
-        configMap:
-           name: teragen-testscript
-           defaultMode: 0755
-      initContainers:
-      - name: ozonefscopy
-        image: elek/ozone-dev:980b7cfb7
-        command:
-        - bash
-        - -c
-        - cp /opt/ozone/share/ozone/lib/hadoop-ozone-filesystem-lib-current-0.5.0-SNAPSHOT.jar
-          /opt/ozonefs
-        volumeMounts:
-        - name: ozonefs
-          mountPath: /opt/ozonefs
       nodeSelector:
-        partition: lower
+          group: b

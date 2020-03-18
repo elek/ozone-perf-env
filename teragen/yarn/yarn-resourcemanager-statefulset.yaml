@@ -51,7 +51,7 @@ spec:
         emptyDir: {}
       initContainers:
       - name: ozonefscopy
-        image: elek/ozone-dev:980b7cfb7
+        image: elek/ozone-dev:49edf55c8
         command:
         - bash
         - -c
@@ -61,4 +61,4 @@ spec:
         - name: ozonefs
           mountPath: /opt/ozonefs
       nodeSelector:
-        partition: lower
+        group: b

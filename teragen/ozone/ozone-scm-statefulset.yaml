@@ -25,7 +25,7 @@ spec:
     spec:
       initContainers:
       - name: init
-        image: elek/ozone-dev:980b7cfb7
+        image: elek/ozone-dev:49edf55c8
         args:
         - ozone
         - scm
@@ -38,7 +38,7 @@ spec:
             name: ozone-config
       containers:
       - name: scm
-        image: elek/ozone-dev:980b7cfb7
+        image: elek/ozone-dev:49edf55c8
         args:
         - ozone
         - scm
@@ -52,4 +52,4 @@ spec:
       - name: data
         emptyDir: {}
       nodeSelector:
-        partition: upper
+        group: a
