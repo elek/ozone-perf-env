@@ -1,3 +1,7 @@
+source:
+  - url: git::https://github.com/flokkr/k8s.git
+  - url: git::https://github.com/flokkr/infra-flekszible.git
+  - url: git::https://github.com/elek/ozone-flekszible.git
 import:
   - path: ../util
   - path: mr
