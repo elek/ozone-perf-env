@@ -1,0 +1,28 @@
+name: perftest/hddstorage
+description: Use real hard disk for saving chunks
+parameter:
+  - name: dir
+    type: string
+---
+- type: add
+  path:
+    - spec
+    - template
+    - spec
+    - containers
+    - .*
+    - volumeMounts
+  value:
+    - name: storage
+      mountPath: /data/storage
+- type: add
+  path:
+    - spec
+    - template
+    - spec
+    - volumes
+  value:
+     - name: storage
+       hostPath:
+         path: {{.dir}}
+         type: Directory

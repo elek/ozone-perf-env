@@ -1,0 +1,25 @@
+name: perftest/hdddata
+description: Use real mounted hard disk for Ratis log
+paramneter:
+  - name: dir
+    type: string
+---
+- type: remove
+  path:
+    - spec
+    - template
+    - spec
+    - volumes
+    - data
+    - emptyDir
+- type: add
+  path:
+    - spec
+    - template
+    - spec
+    - volumes
+    - data
+  value:
+    hostPath:
+         path: {{.dir}}
+         type: Directory

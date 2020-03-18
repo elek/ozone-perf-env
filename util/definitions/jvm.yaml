@@ -1,0 +1,11 @@
+name: perftest/jvm
+description: JVM tuning
+---
+- type: add
+  trigger:
+     metadata:
+        name: ozone-config
+  path:
+    - data
+  value:
+    HADOOP_OPTS: -server -XX:ParallelGCThreads=8 -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=70 -XX:+UseCMSInitiatingOccupancyOnly

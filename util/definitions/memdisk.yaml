@@ -1,0 +1,13 @@
+name: perftest/memdisk
+description: Force to use memdisk
+---
+- type: add
+  path:
+    - spec
+    - template
+    - spec
+    - volumes
+    - data
+    - emptyDir
+  value:
+    medium: Memory

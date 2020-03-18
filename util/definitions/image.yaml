@@ -1,0 +1,10 @@
+name: perftest/ozoneimage
+parameters:
+  name: image
+---
+- type: image
+  image: {{.image}}
+  trigger:
+       metadata:
+         labels:
+           app: ozone

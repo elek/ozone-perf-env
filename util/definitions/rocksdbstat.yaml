@@ -1,0 +1,10 @@
+name: perftest/rocksdbstat
+---
+- type: add
+  trigger:
+       metadata:
+          name: ozone-config
+  path:
+      - data
+  value:
+     OZONE-SITE.XML_ozone.metastore.rocksdb.statistics: "ALL"

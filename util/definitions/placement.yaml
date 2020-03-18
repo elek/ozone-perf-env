@@ -1,0 +1,13 @@
+name: perftest/placement
+parameters:
+  - name: label
+  - name: value
+---
+- type: add
+  path:
+    - spec
+    - template
+    - spec
+  value:
+      nodeSelector:
+          {{.label}}: {{.value}}
