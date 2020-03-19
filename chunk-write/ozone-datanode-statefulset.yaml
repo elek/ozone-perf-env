@@ -32,12 +32,16 @@ spec:
                 operator: In
                 values:
                 - datanode
+              - key: app
+                operator: In
+                values:
+                - ozone
             topologyKey: kubernetes.io/hostname
       securityContext:
         fsGroup: 1000
       containers:
       - name: datanode
-        image: elek/ozonedev:20200220-1
+        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
         args:
         - ozone
         - datanode

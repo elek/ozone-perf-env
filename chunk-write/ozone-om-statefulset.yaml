@@ -25,7 +25,7 @@ spec:
     spec:
       initContainers:
       - name: init
-        image: elek/ozonedev:20200220-1
+        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
         args:
         - ozone
         - om
@@ -41,7 +41,7 @@ spec:
             name: ozone-config
       containers:
       - name: om
-        image: elek/ozonedev:20200220-1
+        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
         args:
         - ozone
         - om

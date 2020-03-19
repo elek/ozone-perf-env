@@ -24,7 +24,7 @@ spec:
     spec:
       initContainers:
       - name: wait
-        image: elek/ozonedev:20200220-1
+        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
         args:
         - ozone
         - scmcli
@@ -36,12 +36,15 @@ spec:
             name: ozone-config
       containers:
       - name: ozone
-        image: elek/ozonedev:20200220-1
+        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
         args:
         - ozone
         - freon
         - dcg
-        - -n10000000
+        - --watch-commit=10
+        - --chunk-per-block=10
+        - -t1
+        - -n1000000000
         env:
         - name: JAEGER_SAMPLER_TYPE
           value: probabilistic

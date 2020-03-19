@@ -1,12 +1,15 @@
-source:
+Gsource:
   - url: git::https://github.com/flokkr/infra-flekszible.git
   - url: git::https://github.com/elek/ozone-flekszible.git
+  - ../util
 import:
+    - path: ../util
     - path: ozone
       transformations:
          - type: ozone/profiler
          - type: PublishStatefulSet
          - type: ozone/devtracing
+         - type: perftest/handlerfix
          - type: Change
            path: 
              - spec
@@ -24,27 +27,14 @@ import:
               kind: Statefulset
               metadata:
                   name: ozone-datanode
-         - type: add
-           trigger:
-              metadata:
-                 name: ozone-config
-           path:
-             - data
-           value:
-              OZONE-SITE.XML_ozone.scm.container.size: 1G
-         - type: add
-           path:
-             - spec
-             - template
-             - spec
-             - volumes
-             - data
-             - emptyDir
-           value:
-             medium: Memory
+#         - type: perftest/hddstorage
+#           dir: /data/1/storage
+         - type: perftest/memdisk
+         - type: perftest/jvm
     - path: ozone/freon
       destination: freon
       transformations:
+         - type: perftest/rocksdbstat
          - type: ozone/devtracing
          - type: Replace
            path:
@@ -52,17 +42,20 @@ import:
              - template
              - spec
              - containers
-             - ozone
+             - .*
              - args
            value:
              - ozone
              - freon
              - dcg
-             - -n10000000
+             - --watch-commit=10
+             - --chunk-per-block=10
+             - -t1
+             - -n1000000000
 transformations:
   - type: Namespace
   - type: image
-    image: elek/ozonedev:20200220-1
+    image: 127.0.0.1:31961/elek/ozone-dev:783a38b
     trigger:
        metadata:
          labels:
