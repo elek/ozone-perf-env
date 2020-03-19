@@ -22,7 +22,6 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9882"
         prometheus.io/path: /prom
-        linkerd.io/inject: enabled
     spec:
       affinity:
         podAntiAffinity:
@@ -49,6 +48,8 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
+        - name: storage
+          mountPath: /data/storage
         envFrom:
         - configMapRef:
             name: ozone-config
@@ -63,3 +64,13 @@ spec:
       - name: data
         emptyDir:
           medium: Memory
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: local-path
+      resources:
+        requests:
+          storage: 2Gi

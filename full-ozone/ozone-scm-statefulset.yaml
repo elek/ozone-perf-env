@@ -22,7 +22,6 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9876"
         prometheus.io/path: /prom
-        linkerd.io/inject: enabled
     spec:
       initContainers:
       - name: init

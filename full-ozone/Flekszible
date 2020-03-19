@@ -9,6 +9,11 @@ import:
       - type: PublishService
     - path: ozone
       transformations:
+         - type: ozone/pvstorage
+           trigger:
+              kind: StatefulSet
+              metadata:
+                 name: ozone-datanode
          - type: Add
            path: 
             - data
@@ -17,14 +22,6 @@ import:
               OZONE-SITE.XML_hdds.ratis.raft.server.write.element-limit: "4096"
               OZONE-SITE.XML_hdds.datanode.df.refresh.period: 60m
               OZONE-SITE.XML_hdds.datanode.du.factory.classname: org.apache.hadoop.hdds.fs.DedicatedDiskSpaceUsageFactory
-         - type: Add
-           path:
-             - spec
-             - template
-             - metadata
-             - annotations
-           value:
-             linkerd.io/inject: enabled
 #         - type: perftest/hddstorage
 #           trigger:
 #              metadata:
@@ -53,7 +50,7 @@ import:
               metadata:
                   name: ozone-datanode
     - path: ozone/freon
-      destination: freon
+      destination: freon-ockg
       transformations:
          - type: ozone/devtracing
          - type: Replace
@@ -68,8 +65,15 @@ import:
              - ozone
              - freon
              - ockg
+             - -s10240
              - -t5
              - -n10000000
+    - path: sleep
+      destination: console
+      transformations:
+      - type: ozone/config
+      - type: image
+        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
 transformations:
   - type: Namespace
   - type: image

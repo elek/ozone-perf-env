@@ -41,6 +41,7 @@ spec:
         - ozone
         - freon
         - ockg
+        - -s10240
         - -t5
         - -n10000000
         env:
