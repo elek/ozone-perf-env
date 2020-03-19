@@ -1,27 +1,22 @@
 
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: ozone-datanode
+  name: perftest-cmw
   labels:
-    app: ozone
-    component: datanode
+    app: perftest
+    component: chunk-manager-write
 spec:
   selector:
     matchLabels:
-      app: ozone
-      component: datanode
-  serviceName: ozone-datanode
+      app: perftest
+      component: chunk-manager-write
   replicas: 6
   template:
     metadata:
       labels:
-        app: ozone
-        component: datanode
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9882"
-        prometheus.io/path: /prom
+        app: perftest
+        component: chunk-manager-write
     spec:
       affinity:
         podAntiAffinity:
@@ -31,15 +26,15 @@ spec:
               - key: component
                 operator: In
                 values:
-                - datanode
+                - chunk-manager-write
             topologyKey: kubernetes.io/hostname
       securityContext:
         fsGroup: 1000
       containers:
       - name: freon
-        image: elek/ozone-dev:HDDS-2717-cmdw
+        image: elek/ozone-dev:c648f9fac
         args:
-         - /opt/tester/test.sh
+        - /opt/tester/test.sh
         volumeMounts:
         - name: script
           mountPath: /opt/tester/test.sh
@@ -47,18 +42,19 @@ spec:
         - name: data
           mountPath: /data
         - name: storage
-          mountPath: /storage
+          mountPath: /data/storage
         envFrom:
         - configMapRef:
             name: ozone-config
       volumes:
-      - name: storage
-        emptyDir: {}
-#            medium: Memory
       - name: data
         emptyDir:
-           medium: Memory
+          medium: Memory
       - name: script
         configMap:
-           name: ozone-testscript
-           defaultMode: 0755
+          name: cmw-testscript
+          defaultMode: 493
+      - name: storage
+        hostPath:
+          path: /data/1/ozone
+          type: Directory

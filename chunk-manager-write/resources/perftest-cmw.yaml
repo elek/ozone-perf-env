@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: perftest-cmw
+  labels:
+    app: perftest
+    component: chunk-manager-write
+spec:
+  selector:
+    matchLabels:
+      app: perftest
+      component: chunk-manager-write
+  replicas: 6
+  template:
+    metadata:
+      labels:
+        app: perftest
+        component: chunk-manager-write
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - chunk-manager-write
+            topologyKey: kubernetes.io/hostname
+      securityContext:
+        fsGroup: 1000
+      containers:
+      - name: freon
+        image: elek/ozone-dev:HDDS-2717-cmdw
+        args:
+         - /opt/tester/test.sh
+        volumeMounts:
+        - name: script
+          mountPath: /opt/tester/test.sh
+          subPath: test.sh
+        - name: data
+          mountPath: /data
+        envFrom:
+        - configMapRef:
+            name: ozone-config
+      volumes:
+      - name: data
+        emptyDir:
+           medium: Memory
+      - name: script
+        configMap:
+           name: cmw-testscript
+           defaultMode: 0755
