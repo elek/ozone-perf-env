@@ -2,19 +2,47 @@ source:
   - url: git::https://github.com/flokkr/infra-flekszible.git
   - url: git::https://github.com/elek/ozone-flekszible.git
 import:
+    - path: ../util
+    - path: jaeger
+      destination: jaeger
+      transformations:
+      - type: PublishService
     - path: ozone
       transformations:
-         - type: ozone/profiler
-         - type: PublishStatefulSet
-         - type: ozone/devtracing
-         - type: Change
+         - type: Add
            path: 
+            - data
+           value:
+              OZONE-SITE.XML_dfs.ratis.client.request.retry.interval: 15s
+              OZONE-SITE.XML_hdds.ratis.raft.server.write.element-limit: "4096"
+              OZONE-SITE.XML_hdds.datanode.df.refresh.period: 60m
+              OZONE-SITE.XML_hdds.datanode.du.factory.classname: org.apache.hadoop.hdds.fs.DedicatedDiskSpaceUsageFactory
+         - type: Add
+           path:
+             - spec
+             - template
+             - metadata
+             - annotations
+           value:
+             linkerd.io/inject: enabled
+         - type: perftest/hddstorage
+           trigger:
+              metadata:
+                 label:
+                    component: datanode
+           dir: /data/1/storage
+         - type: perftest/jvm
+         - type: ozone/devtracing
+         - type: ozone/memdisk
+         - type: PublishStatefulSet
+         - type: Change
+           path:
              - spec
              - replicas
            trigger:
              metadata:
                 name: ozone-datanode
-           replacement: 3
+           replacement: 6
          - type: Add
            path:
              - spec
@@ -24,24 +52,6 @@ import:
               kind: Statefulset
               metadata:
                   name: ozone-datanode
-         - type: add
-           trigger:
-              metadata:
-                 name: ozone-config
-           path:
-             - data
-           value:
-              OZONE-SITE.XML_ozone.scm.container.size: 1G
-         - type: add
-           path:
-             - spec
-             - template
-             - spec
-             - volumes
-             - data
-             - emptyDir
-           value:
-             medium: Memory
     - path: ozone/freon
       destination: freon
       transformations:
@@ -58,12 +68,13 @@ import:
              - ozone
              - freon
              - ockg
+             - -t5
              - -n10000000
 transformations:
   - type: Namespace
   - type: image
-    image: elek/ozonedev:20200219-1
+    image: 127.0.0.1:31961/elek/ozone-dev:783a38b
     trigger:
        metadata:
          labels:
-           app: ozone
+            app: ozone

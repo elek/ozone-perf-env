@@ -22,10 +22,11 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9874"
         prometheus.io/path: /prom
+        linkerd.io/inject: enabled
     spec:
       initContainers:
       - name: init
-        image: elek/ozonedev:20200219-1
+        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
         args:
         - ozone
         - om
@@ -41,13 +42,15 @@ spec:
             name: ozone-config
       containers:
       - name: om
-        image: elek/ozonedev:20200219-1
+        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
         args:
         - ozone
         - om
         volumeMounts:
         - name: data
           mountPath: /data
+        - name: storage
+          mountPath: /data/storage
         envFrom:
         - configMapRef:
             name: ozone-config
@@ -62,3 +65,7 @@ spec:
       - name: data
         emptyDir:
           medium: Memory
+      - name: storage
+        hostPath:
+          path: /data/1/storage
+          type: Directory

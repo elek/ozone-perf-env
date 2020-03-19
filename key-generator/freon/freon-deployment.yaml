@@ -24,7 +24,7 @@ spec:
     spec:
       initContainers:
       - name: wait
-        image: elek/ozonedev:20200219-1
+        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
         args:
         - ozone
         - scmcli
@@ -36,11 +36,12 @@ spec:
             name: ozone-config
       containers:
       - name: ozone
-        image: elek/ozonedev:20200219-1
+        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
         args:
         - ozone
         - freon
         - ockg
+        - -t5
         - -n10000000
         env:
         - name: JAEGER_SAMPLER_TYPE
