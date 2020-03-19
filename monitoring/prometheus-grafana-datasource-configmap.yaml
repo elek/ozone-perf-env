@@ -7,10 +7,10 @@ data:
   prometheus.yaml: |
     apiVersion: 1
     datasources:
-    - name: prometheus
-      type: prometheus
-      access: proxy
-      orgId: 1
-      url: http://prometheus:9090
-      version: 1
-      editable: false
+      - name: prometheus
+        type: prometheus
+        access: proxy
+        orgId: 1
+        url: http://prometheus:9090
+        version: 1
+        editable: false

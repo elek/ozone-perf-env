@@ -15,4 +15,12 @@ data:
       updateIntervalSeconds: 3
       options:
         path: /etc/nodeexporter-grafana-dashboard
+    - name: ozone-dashboard
+      orgId: 1
+      folder: ozone-dashboard
+      type: file
+      disableDeletion: false
+      updateIntervalSeconds: 3
+      options:
+        path: /etc/ozone-dashboard
 kind: ConfigMap

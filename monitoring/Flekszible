@@ -2,9 +2,6 @@ source:
   - url: git::https://github.com/flokkr/infra-flekszible.git
   - url: git::https://github.com/elek/ozone-flekszible.git
 import:
-    - path: jaeger
-      transformations:
-        - type: PublishStatefulSet
     - path: grafana
       transformations:
       - type: PublishService
@@ -12,3 +9,8 @@ import:
       transformations:
         - type: PublishService
     - path: node-exporter
+    - path: ozone
+      transformations:
+      - type: namefilter
+        include:
+          - ozone-dashboard
