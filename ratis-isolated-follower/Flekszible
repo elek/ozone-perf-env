@@ -1,0 +1,8 @@
+name: perftest
+import:
+  - path: ../util
+transformations:
+  - type: perftest/hddstore
+    dir: /data/1/ozone
+  - type: image
+    image: elek/ozone-dev:a68ed78d9

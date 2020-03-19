@@ -1,5 +1,0 @@
-:import:
-  - path: ../datanode-isolated
-transformations:
-  - type: Image
-    image: elek/ozonedev:20200128-1
