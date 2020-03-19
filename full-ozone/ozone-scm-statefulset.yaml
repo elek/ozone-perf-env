@@ -2,55 +2,50 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: ozone-datanode
+  name: ozone-scm
   labels:
     app: ozone
-    component: datanode
+    component: scm
 spec:
   selector:
     matchLabels:
       app: ozone
-      component: datanode
-  serviceName: ozone-datanode
-  replicas: 6
+      component: scm
+  serviceName: ozone-scm
+  replicas: 1
   template:
     metadata:
       labels:
         app: ozone
-        component: datanode
+        component: scm
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "9882"
+        prometheus.io/port: "9876"
         prometheus.io/path: /prom
         linkerd.io/inject: enabled
     spec:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: component
-                operator: In
-                values:
-                - datanode
-              - key: app
-                operator: In
-                values:
-                - ozone
-            topologyKey: kubernetes.io/hostname
-      securityContext:
-        fsGroup: 1000
-      containers:
-      - name: datanode
+      initContainers:
+      - name: init
         image: 127.0.0.1:31961/elek/ozone-dev:783a38b
         args:
         - ozone
-        - datanode
+        - scm
+        - --init
         volumeMounts:
         - name: data
           mountPath: /data
-        - name: storage
-          mountPath: /data/storage
+        envFrom:
+        - configMapRef:
+            name: ozone-config
+      containers:
+      - name: scm
+        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
+        args:
+        - ozone
+        - scm
+        volumeMounts:
+        - name: data
+          mountPath: /data
         envFrom:
         - configMapRef:
             name: ozone-config
@@ -65,7 +60,3 @@ spec:
       - name: data
         emptyDir:
           medium: Memory
-      - name: storage
-        hostPath:
-          path: /data/1/storage
-          type: Directory

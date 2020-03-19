@@ -25,12 +25,12 @@ import:
              - annotations
            value:
              linkerd.io/inject: enabled
-         - type: perftest/hddstorage
-           trigger:
-              metadata:
-                 label:
-                    component: datanode
-           dir: /data/1/storage
+#         - type: perftest/hddstorage
+#           trigger:
+#              metadata:
+#                 label:
+#                    component: datanode
+#           dir: /data/1/storage
          - type: perftest/jvm
          - type: ozone/devtracing
          - type: ozone/memdisk

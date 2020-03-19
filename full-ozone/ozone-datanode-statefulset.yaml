@@ -2,55 +2,53 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: ozone-om
+  name: ozone-datanode
   labels:
     app: ozone
-    component: om
+    component: datanode
 spec:
   selector:
     matchLabels:
       app: ozone
-      component: om
-  serviceName: ozone-om
-  replicas: 1
+      component: datanode
+  serviceName: ozone-datanode
+  replicas: 6
   template:
     metadata:
       labels:
         app: ozone
-        component: om
+        component: datanode
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "9874"
+        prometheus.io/port: "9882"
         prometheus.io/path: /prom
         linkerd.io/inject: enabled
     spec:
-      initContainers:
-      - name: init
-        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
-        args:
-        - ozone
-        - om
-        - --init
-        env:
-        - name: WAITFOR
-          value: ozone-scm-0.ozone-scm:9876
-        volumeMounts:
-        - name: data
-          mountPath: /data
-        envFrom:
-        - configMapRef:
-            name: ozone-config
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - datanode
+              - key: app
+                operator: In
+                values:
+                - ozone
+            topologyKey: kubernetes.io/hostname
+      securityContext:
+        fsGroup: 1000
       containers:
-      - name: om
+      - name: datanode
         image: 127.0.0.1:31961/elek/ozone-dev:783a38b
         args:
         - ozone
-        - om
+        - datanode
         volumeMounts:
         - name: data
           mountPath: /data
-        - name: storage
-          mountPath: /data/storage
         envFrom:
         - configMapRef:
             name: ozone-config
@@ -65,7 +63,3 @@ spec:
       - name: data
         emptyDir:
           medium: Memory
-      - name: storage
-        hostPath:
-          path: /data/1/storage
-          type: Directory
