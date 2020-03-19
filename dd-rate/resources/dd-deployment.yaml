@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dd
+  labels:
+    app: perftest
+    component: dd
+spec:
+  selector:
+    matchLabels:
+      app: perftest
+      component: dd
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: perftest
+        component: dd
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - dd
+            topologyKey: kubernetes.io/hostname
+      securityContext:
+        fsGroup: 1000
+      containers:
+      - name: dd
+        image: elek/ozonedev:20200211-1
+        args:
+         - /opt/tester/test.sh
+        volumeMounts:
+        - name: script
+          mountPath: /opt/tester/test.sh
+          subPath: test.sh
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        emptyDir:
+           medium: Memory
+      - name: script
+        configMap:
+           name: dd-testscript
+           defaultMode: 0755
