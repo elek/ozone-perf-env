@@ -1,0 +1,6 @@
+source:
+  - url: git::https://github.com/flokkr/infra-flekszible.git
+import:
+    - path: registry
+      transformations:
+      - type: PublishService
