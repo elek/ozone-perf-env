@@ -24,4 +24,7 @@ data:
     -XX:+UseCMSInitiatingOccupancyOnly
   OZONE-SITE.XML_ozone.om.handler.count.key: "250"
   OZONE-SITE.XML_ozone.scm.handler.count.key: "250"
-  OZONE-SITE.XML_ozone.scm.chunk.layout: FILE_PER_CHUNK
+  OZONE-SITE.XML_dfs.ratis.client.request.retry.interval: 15s
+  OZONE-SITE.XML_hdds.ratis.raft.server.write.element-limit: "4096"
+  OZONE-SITE.XML_hdds.datanode.df.refresh.period: 60m
+  OZONE-SITE.XML_hdds.datanode.du.factory.classname: org.apache.hadoop.hdds.fs.DedicatedDiskSpaceUsageFactory

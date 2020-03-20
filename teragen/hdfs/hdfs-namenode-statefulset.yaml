@@ -46,10 +46,16 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
-      volumes:
-      - name: data
-        hostPath:
-          path: /data/1/hdfs
-          type: Directory
+      volumes: []
       nodeSelector:
-        group: a
+        partition: lower
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: local-path
+      resources:
+        requests:
+          storage: 2Gi

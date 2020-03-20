@@ -24,67 +24,27 @@ import:
        - spec
       value:
          nodeSelector:
-            group: b
+            partition: upper
   - path: ozone
     destination: ozone
     transformations:
     - type: perftest/jvm
-    - type: perftest/handlerfix
-    - type: add
-      trigger:
-         metadata:
-            name: ozone-config
-      path:
-        - data
-      value:
-        OZONE-SITE.XML_ozone.scm.chunk.layout: FILE_PER_CHUNK
+    - type: perftest/tuning
+#    - type: add
+#      trigger:
+#         metadata:
+#            name: ozone-config
+#      path:
+#        - data
+#      value:
+#        OZONE-SITE.XML_ozone.scm.chunk.layout: FILE_PER_CHUNK
     - type: remove
       path:
         - data
         - CORE-SITE.XML_fs.defaultFS
     - type: image
-      image: elek/ozone-dev:49edf55c8
-    - type: add
-      trigger:
-        metadata:
-          name: ozone-datanode
-      path:
-        - spec
-        - template
-        - spec
-        - containers
-        - datanode
-        - volumeMounts
-      value:
-        - name: storage
-          mountPath: /data/storage
-    - type: add
-      trigger:
-        metadata:
-          name: ozone-datanode
-      path:
-        - spec
-        - template
-        - spec
-        - volumes
-      value:
-         - name: storage
-           hostPath:
-             path: /data/1/ozone
-             type: Directory
-    - type: add
-      trigger:
-        metadata:
-          name: ozone-datanode
-      path:
-        - spec
-        - template
-        - spec
-        - volumes
-        - data
-        - emptyDir
-      value:
-        medium: Memory
+      image: elek/ozone:0.5.0-rc2-beta
+    - type: ozone/pvstorage
     - type: add
       path:
         - spec
@@ -92,29 +52,11 @@ import:
         - spec
       value:
         nodeSelector:
-           group: a
+           partition: lower
   - path: hdfs
     destination: hdfs
     transformations:
-    - type: remove
-      path:
-        - spec
-        - template
-        - spec
-        - volumes
-        - data
-        - emptyDir
-    - type: add
-      path:
-        - spec
-        - template
-        - spec
-        - volumes
-        - data
-      value:
-         hostPath:
-            path: /data/1/hdfs
-            type: Directory
+    - type: perftest/pvdata
     - type: add
       path:
         - spec
@@ -122,5 +64,4 @@ import:
         - spec
       value:
         nodeSelector:
-           group: a
-
+           partition: lower

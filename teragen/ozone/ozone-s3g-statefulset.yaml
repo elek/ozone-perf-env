@@ -21,13 +21,15 @@ spec:
     spec:
       containers:
       - name: s3g
-        image: elek/ozone-dev:49edf55c8
+        image: elek/ozone:0.5.0-rc2-beta
         args:
         - ozone
         - s3g
         volumeMounts:
         - name: data
           mountPath: /data
+        - name: storage
+          mountPath: /data/storage
         envFrom:
         - configMapRef:
             name: ozone-config
@@ -35,4 +37,14 @@ spec:
       - name: data
         emptyDir: {}
       nodeSelector:
-        group: a
+        partition: lower
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: local-path
+      resources:
+        requests:
+          storage: 2Gi

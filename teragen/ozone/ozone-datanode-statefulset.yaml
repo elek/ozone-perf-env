@@ -41,7 +41,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: datanode
-        image: elek/ozone-dev:49edf55c8
+        image: elek/ozone:0.5.0-rc2-beta
         args:
         - ozone
         - datanode
@@ -55,11 +55,16 @@ spec:
             name: ozone-config
       volumes:
       - name: data
-        emptyDir:
-          medium: Memory
-      - name: storage
-        hostPath:
-          path: /data/1/ozone
-          type: Directory
+        emptyDir: {}
       nodeSelector:
-        group: a
+        partition: lower
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: local-path
+      resources:
+        requests:
+          storage: 2Gi

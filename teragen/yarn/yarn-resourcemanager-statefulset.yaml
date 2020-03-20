@@ -61,4 +61,4 @@ spec:
         - name: ozonefs
           mountPath: /opt/ozonefs
       nodeSelector:
-        group: b
+        partition: upper

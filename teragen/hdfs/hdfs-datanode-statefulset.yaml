@@ -52,9 +52,15 @@ spec:
       - name: config
         configMap:
           name: hdfs-config
-      - name: data
-        hostPath:
-          path: /data/1/hdfs
-          type: Directory
       nodeSelector:
-        group: a
+        partition: lower
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: local-path
+      resources:
+        requests:
+          storage: 2Gi
