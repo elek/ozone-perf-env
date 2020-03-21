@@ -2,12 +2,27 @@ source:
   - url: git::https://github.com/flokkr/k8s.git
   - url: git::https://github.com/flokkr/infra-flekszible.git
   - url: git::https://github.com/elek/ozone-flekszible.git
+  - path: ../flekszible
 import:
-  - path: ../util
-  - path: mr
+  - path: util
+  - path: hadoop
+  - path: spark
+    destination: spark
+    transformations:
+    - type: image
+      image: flokkr/spark:2.4.4
+    - type: hadoop/distribute
+      image: flokkr/hadoop
+    - type: ozone/client-config
+    - type: ozone/ozonefs
+      image: elek/ozone:0.5.0-rc2-beta
+    - type: yarn/config
+    - type: hdfs/config
+  - path: mapreduce
+    destination: mr
     transformations:
     - type: ozone/ozonefs
-      image: elek/ozone-dev:49edf55c8
+      image: elek/ozone:0.5.0-rc2-beta
     - type: perftest/runconfigmap
       configmap:  teragen-testscript
       scriptname: teragen.sh
@@ -15,7 +30,7 @@ import:
     destination: yarn
     transformations:
     - type: ozone/ozonefs
-      image: elek/ozone-dev:49edf55c8
+      image: elek/ozone:0.5.0-rc2-beta
     - type: PublishService
     - type: add
       path:

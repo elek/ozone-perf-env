@@ -4,13 +4,14 @@ set -x
 
 
 ROWS=$(numfmt --from=auto --to-unit=100 100G)
+MR_EXAMPLES_JAR=/opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.1.jar
+
+for i in `seq 0 0`; do
+
 OUTPUT_DIR=teragen-$(shuf -i 1000-2000 -n 1)
 
 OUTPUT_DIR=o3fs://bucket1.vol1.ozone-om-0.ozone-om/$OUTPUT_DIR
 
-MR_EXAMPLES_JAR=/opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.1.jar
-
-for i in `seq 0 5`; do
 
 time yarn jar $MR_EXAMPLES_JAR teragen \
 -Dmapreduce.map.log.level=INFO \

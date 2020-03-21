@@ -5,7 +5,7 @@ metadata:
   name: yarn-nodemanager-public
 spec:
   ports:
-  - port: 8084
+  - port: 8042
     name: web
   selector:
     app: yarn
