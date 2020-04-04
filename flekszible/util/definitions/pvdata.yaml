@@ -1,0 +1,26 @@
+name: perftest/pvdata
+---
+- type: Remove
+  path:
+    - spec
+    - template
+    - spec
+    - volumes
+    - data
+- type: Add
+  trigger:
+    kind: StatefulSet
+  path:
+    - spec
+  value:
+    volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 2Gi
+
