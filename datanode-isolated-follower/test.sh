@@ -13,7 +13,7 @@ kubectl apply -f ozone-config-configmap.yaml
 kubectl apply -f ozone-datanode-statefulset.yaml
 kubectl apply -f ozone-datanode-service.yaml
 
-retry grep_log ozone-datanode-0 Starting XceiverServerRatis
+retry grep_log ozone-datanode-0 "Starting XceiverServerRatis"
 
 RAFT_ID=$(kubectl logs ozone-datanode-0 | grep "Starting XceiverServerRatis" | awk '{print $8}')
 
