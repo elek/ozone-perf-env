@@ -24,6 +24,10 @@ jobs:
       - name: Run test
         run: |
           ./datanode-isolated-follower/test.sh
+      - run: |
+          kubectl get pod
+          kubectl describe pod
+        if: always()
       - uses: actions/upload-artifact@master
         if: always()
         with:
