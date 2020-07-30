@@ -1,21 +1,35 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: dd
+  name: perftest-fio
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+     app: perftest
+     component: fio
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: perftest-fio
   labels:
     app: perftest
-    component: dd
+    component: fio
 spec:
+  serviceName: perftest-fio
   selector:
     matchLabels:
       app: perftest
-      component: dd
-  replicas: 3
+      component: fio
+  replicas: 1
   template:
     metadata:
       labels:
         app: perftest
-        component: dd
+        component: fio
     spec:
       affinity:
         podAntiAffinity:
@@ -25,13 +39,13 @@ spec:
               - key: component
                 operator: In
                 values:
-                - dd
+                - fio
             topologyKey: kubernetes.io/hostname
       securityContext:
         fsGroup: 1000
       containers:
-      - name: dd
-        image: elek/ozonedev:20200211-1
+      - name: fio
+        image: flokkr/perftest
         args:
          - /opt/tester/test.sh
         volumeMounts:
@@ -42,9 +56,8 @@ spec:
           mountPath: /data
       volumes:
       - name: data
-        emptyDir:
-           medium: Memory
+        emptyDir: {}
       - name: script
         configMap:
-           name: dd-testscript
+           name: fio-testscript
            defaultMode: 0755

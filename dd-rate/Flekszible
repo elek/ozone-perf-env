@@ -1,6 +1,0 @@
-name: perftest
-import:
-  - path: ../util
-transformations:
-  - type: perftest/hddstore
-    dir: /data/1/ozone
