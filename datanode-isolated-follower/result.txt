@@ -1,0 +1,20 @@
+2020-07-30 17:42:38 INFO  ProgressBar:163 - Progress: 99.04 % (99040 out of 100000)
+2020-07-30 17:42:39 INFO  ProgressBar:163 - Progress: 100.00 % (100000 out of 100000)
+2020-07-30 17:42:39 INFO  metrics:107 - type=TIMER, name=append-entry, count=100000, min=0.003212, max=12.565493, mean=0.2335013833406004, stddev=0.6013215856581272, median=0.059379, p75=0.134128, p95=1.154001, p98=1.579797, p99=2.044657, p999=8.543057, mean_rate=3970.189449947613, m1=2655.4399110997583, m5=2086.202635379816, m15=1975.583870535077, rate_unit=events/second, duration_unit=milliseconds
+2020-07-30 17:42:39 INFO  BaseFreonGenerator:75 - Total execution time (sec): 25
+2020-07-30 17:42:39 INFO  BaseFreonGenerator:75 - Failures: 0
+2020-07-30 17:42:39 INFO  BaseFreonGenerator:75 - Successful executions: 100000
++ sync
+
+real	0m0.031s
+user	0m0.000s
+sys	0m0.003s
+++ date +%s.%N
++ END_TIME=1596130959.724385421
+++ echo 1596130959.724385421 1596130933.538362794
+++ awk '{print $1 - $2}'
+Total time: 26.186
+Test is Done
++ echo 'Total time: 26.186'
++ echo 'Test is Done'
++ sleep 100000
