@@ -32,7 +32,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: freon
-        image: elek/ozone-dev:c648f9fac
+        image: elek/ozone-dev:30ec0e2d0
         args:
         - /opt/tester/test.sh
         volumeMounts:
@@ -41,8 +41,6 @@ spec:
           subPath: test.sh
         - name: data
           mountPath: /data
-        - name: storage
-          mountPath: /data/storage
         envFrom:
         - configMapRef:
             name: ozone-config
@@ -54,7 +52,3 @@ spec:
         configMap:
           name: cmw-testscript
           defaultMode: 493
-      - name: storage
-        hostPath:
-          path: /data/1/ozone
-          type: Directory
