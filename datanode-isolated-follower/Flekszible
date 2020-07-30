@@ -1,5 +1,6 @@
 source:
-- dir: ../flekszible
+- path: ../flekszible
+- url: github.com/flokkr/docker-ozone
 import:
 - path: util
 - path: ozone
@@ -31,7 +32,7 @@ import:
     value: 1
 - path: ozone-environment
   transformations:
-  - type: util/mountfile
+  - type: perftest/mountfile
     configmap: ozone-testscript
     filename: test.sh
     destination: /opt/test/
