@@ -29,6 +29,9 @@ retry() {
    fi
 }
 
+grep_pod_list() {
+   kubectl get pod | grep "$1"
+}
 grep_log() {
    CONTAINER="$1"
    PATTERN="$2"
