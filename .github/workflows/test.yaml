@@ -31,11 +31,13 @@ jobs:
         run: |
           ./${{ matrix.name }}/test.sh
       - run: |
-          kubectl get pod
-          kubectl describe pod
+          kubectl get pod | tee ./${{ matrix.name }}/results/podslist.txt
+          kubectl describe pod | tee ./${{ matrix.name }}/results/pods-describe.txt
+          kubectl get pods -o go-template --template  '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' -l app=ozone | xargs -n1 kubectl logs --tail=11
+ | tee ./${{ matrix.name }}/results/logs.txt          
         if: always()
       - uses: actions/upload-artifact@master
         if: always()
         with:
           name: ${{ matrix.name }}
-          path: ${{ matrix.name }}/result.txt
+          path: ${{ matrix.name }}/results/

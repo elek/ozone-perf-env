@@ -1,0 +1,20 @@
+2020-07-31 04:03:41 INFO  ProgressBar:163 - Progress: 5.93 % (59334 out of 1000000)
+2020-07-31 04:03:42 INFO  ProgressBar:163 - Progress: 16.21 % (162147 out of 1000000)
+2020-07-31 04:03:43 INFO  ProgressBar:163 - Progress: 28.17 % (281688 out of 1000000)
+2020-07-31 04:03:44 INFO  ProgressBar:163 - Progress: 40.71 % (407104 out of 1000000)
+2020-07-31 04:03:45 INFO  ProgressBar:163 - Progress: 53.26 % (532627 out of 1000000)
+2020-07-31 04:03:46 INFO  ProgressBar:163 - Progress: 65.51 % (655055 out of 1000000)
+2020-07-31 04:03:47 INFO  ProgressBar:163 - Progress: 78.03 % (780290 out of 1000000)
+2020-07-31 04:03:48 INFO  ProgressBar:163 - Progress: 90.38 % (903790 out of 1000000)
+2020-07-31 04:03:49 INFO  ProgressBar:163 - Progress: 100.00 % (1000000 out of 1000000)
+2020-07-31 04:03:49 INFO  metrics:107 - type=TIMER, name=chunk-write, count=1000000, min=0.005417, max=0.039511, mean=0.007429704932897458, stddev=0.004211045840663679, median=0.006057, p75=0.006948, p95=0.019766, p98=0.021944, p99=0.024441, p999=0.036421, mean_rate=110741.500905225, m1=111648.0, m5=111648.0, m15=111648.0, rate_unit=events/second, duration_unit=milliseconds
+2020-07-31 04:03:49 INFO  BaseFreonGenerator:75 - Total execution time (sec): 9
+2020-07-31 04:03:49 INFO  BaseFreonGenerator:75 - Failures: 0
+2020-07-31 04:03:49 INFO  BaseFreonGenerator:75 - Successful executions: 1000000
+
+real	0m1.132s
+user	0m0.000s
+sys	0m0.023s
+Total time: 11.0548
+Hostname: ozone-env-55994c4b89-7zrtn
+Test is Done
