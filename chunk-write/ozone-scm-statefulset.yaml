@@ -25,7 +25,7 @@ spec:
     spec:
       initContainers:
       - name: init
-        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
+        image: elek/ozone-dev:30ec0e2d0
         args:
         - ozone
         - scm
@@ -38,7 +38,7 @@ spec:
             name: ozone-config
       containers:
       - name: scm
-        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
+        image: elek/ozone-dev:30ec0e2d0
         args:
         - ozone
         - scm

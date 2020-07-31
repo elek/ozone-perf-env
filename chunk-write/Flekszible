@@ -1,9 +1,8 @@
-Gsource:
-  - url: git::https://github.com/flokkr/infra-flekszible.git
-  - url: git::https://github.com/elek/ozone-flekszible.git
-  - ../util
+source:
+  - url: github.com/flokkr/docker-ozone
+  - path: ..
 import:
-    - path: ../util
+    - path: util
     - path: ozone
       transformations:
          - type: ozone/profiler
@@ -27,15 +26,11 @@ import:
               kind: Statefulset
               metadata:
                   name: ozone-datanode
-#         - type: perftest/hddstorage
-#           dir: /data/1/storage
          - type: perftest/memdisk
          - type: perftest/jvm
-    - path: ozone/freon
+    - path: ozone-freon
       destination: freon
       transformations:
-         - type: perftest/rocksdbstat
-         - type: ozone/devtracing
          - type: Replace
            path:
              - spec
@@ -48,14 +43,13 @@ import:
              - ozone
              - freon
              - dcg
-             - --watch-commit=10
-             - --chunk-per-block=10
-             - -t1
-             - -n1000000000
+             - --size=10240
+             - -t40
+             - -n100000
 transformations:
   - type: Namespace
   - type: image
-    image: 127.0.0.1:31961/elek/ozone-dev:783a38b
+    image: elek/ozone-dev:30ec0e2d0
     trigger:
        metadata:
          labels:

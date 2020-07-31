@@ -22,36 +22,17 @@ spec:
         prometheus.io/port: "9884"
         prometheus.io/path: /prom
     spec:
-      initContainers:
-      - name: wait
-        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
-        args:
-        - ozone
-        - scmcli
-        - safemode
-        - wait
-        env: []
-        envFrom:
-        - configMapRef:
-            name: ozone-config
       containers:
       - name: ozone
-        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
+        image: elek/ozone-dev:30ec0e2d0
         args:
         - ozone
         - freon
         - dcg
-        - --watch-commit=10
-        - --chunk-per-block=10
-        - -t1
-        - -n1000000000
-        env:
-        - name: JAEGER_SAMPLER_TYPE
-          value: probabilistic
-        - name: JAEGER_SAMPLER_PARAM
-          value: "0.01"
-        - name: JAEGER_AGENT_HOST
-          value: jaeger-0.jaeger
+        - --size=10240
+        - -t40
+        - -n100000
+        env: []
         envFrom:
         - configMapRef:
             name: ozone-config

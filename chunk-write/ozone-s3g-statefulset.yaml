@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: s3g
-        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
+        image: elek/ozone-dev:30ec0e2d0
         args:
         - ozone
         - s3g

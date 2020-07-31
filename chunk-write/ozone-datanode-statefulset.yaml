@@ -23,25 +23,11 @@ spec:
         prometheus.io/port: "9882"
         prometheus.io/path: /prom
     spec:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: component
-                operator: In
-                values:
-                - datanode
-              - key: app
-                operator: In
-                values:
-                - ozone
-            topologyKey: kubernetes.io/hostname
       securityContext:
         fsGroup: 1000
       containers:
       - name: datanode
-        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
+        image: elek/ozone-dev:30ec0e2d0
         args:
         - ozone
         - datanode
