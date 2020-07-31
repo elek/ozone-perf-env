@@ -17,7 +17,7 @@ kubectl apply -f .
 
 retry grep_pod_list env
 
-kubectl wait pod --for=condition=Ready -l app=ozone,component=env
+kubectl wait pod --timeout=300s --for=condition=Ready -l app=ozone,component=env
 
 TEST_POD=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' -l component=env)
 
