@@ -15,8 +15,10 @@ flekszible generate
 
 kubectl apply -f .
 
+kubectl wait pod --for=condition=Ready -l app=ozone,component=env
+
 TEST_POD=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' -l component=env)
 
 MAX_RETRY=100 retry grep_log $TEST_POD "Test is Done"
 
-kubectl logs --tail=20 $TEST_POD | tree results/result.txt
+kubectl logs --tail=20 $TEST_POD | tee results/result.txt
