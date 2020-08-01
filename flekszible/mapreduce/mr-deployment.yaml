@@ -23,5 +23,3 @@ spec:
         envFrom:
         - configMapRef:
             name: yarn-config
-      nodeSelector:
-          partition: upper
