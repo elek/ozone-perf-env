@@ -1,1 +1,0 @@
-curl http://10.17.237.29:32432/ws/v1/cluster/apps | jq -r '.apps.app[] | [.id,.state,.finalStatus,.elapsedTime, .vcoreSeconds] | @tsv'

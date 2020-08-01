@@ -1,33 +1,26 @@
 
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: yarn-resourcemanager
+  name: yarn-teragen
   labels:
     app: yarn
-    component: resourcemanager
+    component: teragen
 spec:
-  serviceName: yarn-resourcemanager
   replicas: 1
-  updateStrategy:
-    type: RollingUpdate
-  podManagementPolicy: Parallel
   selector:
     matchLabels:
       app: yarn
-      component: resourcemanager
+      component: teragen
   template:
     metadata:
       labels:
         app: yarn
-        component: resourcemanager
+        component: teragen
     spec:
       containers:
-      - name: yarn-resourcemanager
+      - name: teragen
         image: flokkr/hadoop
-        args:
-        - yarn
-        - resourcemanager
         envFrom:
         - configMapRef:
             name: yarn-config
@@ -35,32 +28,34 @@ spec:
             name: ozone-client-config
         - configMapRef:
             name: ozone-config
-        - configMapRef:
-            name: hdfs-config
         volumeMounts:
         - name: ozonefs
           mountPath: /opt/ozonefs
+        - name: script
+          mountPath: /opt/script/teragen.sh
+          subPath: teragen.sh
         env:
         - name: HADOOP_CLASSPATH
           value: /opt/ozonefs/hadoop-ozone-filesystem.jar
-      volumes:
-      - name: config
-        configMap:
-          name: yarn-config
-      - name: data
-        emptyDir: {}
-      - name: ozonefs
-        emptyDir: {}
+        args:
+        - /opt/script/teragen.sh
       initContainers:
       - name: ozonefscopy
         image: elek/ozone-dev:30ec0e2d0
         command:
         - bash
         - -c
-        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop2-*.jar /opt/ozonefs/hadoop-ozone-filesystem.jar
+        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop3-*.jar /opt/ozonefs/hadoop-ozone-filesystem.jar
         volumeMounts:
         - name: ozonefs
           mountPath: /opt/ozonefs
         envFrom:
         - configMapRef:
             name: ozone-client-config
+      volumes:
+      - name: ozonefs
+        emptyDir: {}
+      - name: script
+        configMap:
+          name: teragen-testscript
+          defaultMode: 493

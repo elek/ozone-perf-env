@@ -1,5 +1,4 @@
 source:
-  - url: git::https://github.com/flokkr/docker-ozone.git?ref=dev-0.6.0
   - url: git::https://github.com/flokkr/docker-hadoop.git
   - path: ../flekszible
 import:
@@ -7,34 +6,29 @@ import:
   - path: hadoop
   - path: mapreduce
     transformations:
-    - type: ozone/ozonefs
-      image: elek/ozone-dev:30ec0e2d0
     - type: perftest/runconfigmap
       configmap:  teragen-testscript
       scriptname: teragen.sh
+    - type: hdfs/config
   - path: yarn
-    destination: yarn
+    destination: yarn-services
     transformations:
-    - type: ozone/ozonefs
-      image: elek/ozone-dev:30ec0e2d0
-    - type: ozone/client-config
     - type: PublishService
+    - type: hdfs/config
     - type: add
       path:
         - data
       value:
          YARN-SITE.XML_yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage: "100"
-  - path: ozone
-    destination: ozone
+  - path: hdfs
+    destination: hdfs-services
     transformations:
-    - type: perftest/jvm
-    - type: perftest/tuning
-    - type: remove
+    - type: add
+      trigger:
+         metadata:
+            name: hdfs-config
       path:
         - data
-        - CORE-SITE.XML_fs.defaultFS
-    - type: image
-      image: elek/ozone-dev:30ec0e2d0
-  - path: hdfs
-    destination: hdfs
-  - path: ozone-client
+      value:
+         CORE-SITE.XML_fs.defaultFS: hdfs://hdfs-namenode-0.hdfs-namenode:9820/
+ 

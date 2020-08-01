@@ -1,0 +1,63 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: yarn-timeline
+  labels:
+    app: yarn
+    component: timeline
+spec:
+  serviceName: yarn-timeline
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: Parallel
+  selector:
+    matchLabels:
+      app: yarn
+      component: timeline
+  template:
+    metadata:
+      labels:
+        app: yarn
+        component: timeline
+    spec:
+      containers:
+      - name: yarn-timeline
+        image: flokkr/hadoop
+        args:
+        - yarn
+        - timelineserver
+        envFrom:
+        - configMapRef:
+            name: yarn-config
+        - configMapRef:
+            name: ozone-client-config
+        - configMapRef:
+            name: ozone-config
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        env:
+        - name: HADOOP_CLASSPATH
+          value: /opt/ozonefs/hadoop-ozone-filesystem.jar
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: ozonefs
+        emptyDir: {}
+      initContainers:
+      - name: ozonefscopy
+        image: elek/ozone-dev:30ec0e2d0
+        command:
+        - bash
+        - -c
+        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop3-*.jar /opt/ozonefs/hadoop-ozone-filesystem.jar
+        volumeMounts:
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        envFrom:
+        - configMapRef:
+            name: ozone-client-config

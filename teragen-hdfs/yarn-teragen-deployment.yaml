@@ -25,33 +25,14 @@ spec:
         - configMapRef:
             name: yarn-config
         - configMapRef:
-            name: ozone-config
-        - configMapRef:
             name: hdfs-config
+        args:
+        - /opt/script/teragen.sh
         volumeMounts:
-        - name: ozonefs
-          mountPath: /opt/ozonefs
         - name: script
           mountPath: /opt/script/teragen.sh
           subPath: teragen.sh
-        env:
-        - name: HADOOP_CLASSPATH
-          value: /opt/ozonefs/hadoop-ozone-filesystem.jar
-        args:
-        - /opt/script/teragen.sh
-      initContainers:
-      - name: ozonefscopy
-        image: elek/ozone-dev:30ec0e2d0
-        command:
-        - bash
-        - -c
-        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop2-*.jar /opt/ozonefs/hadoop-ozone-filesystem.jar
-        volumeMounts:
-        - name: ozonefs
-          mountPath: /opt/ozonefs
       volumes:
-      - name: ozonefs
-        emptyDir: {}
       - name: script
         configMap:
           name: teragen-testscript

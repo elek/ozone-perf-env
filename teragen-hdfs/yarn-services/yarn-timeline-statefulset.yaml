@@ -32,34 +32,10 @@ spec:
         - configMapRef:
             name: yarn-config
         - configMapRef:
-            name: ozone-client-config
-        - configMapRef:
-            name: ozone-config
-        - configMapRef:
             name: hdfs-config
         volumeMounts:
         - name: data
           mountPath: /data
-        - name: ozonefs
-          mountPath: /opt/ozonefs
-        env:
-        - name: HADOOP_CLASSPATH
-          value: /opt/ozonefs/hadoop-ozone-filesystem.jar
       volumes:
       - name: data
         emptyDir: {}
-      - name: ozonefs
-        emptyDir: {}
-      initContainers:
-      - name: ozonefscopy
-        image: elek/ozone-dev:30ec0e2d0
-        command:
-        - bash
-        - -c
-        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop2-*.jar /opt/ozonefs/hadoop-ozone-filesystem.jar
-        volumeMounts:
-        - name: ozonefs
-          mountPath: /opt/ozonefs
-        envFrom:
-        - configMapRef:
-            name: ozone-client-config
