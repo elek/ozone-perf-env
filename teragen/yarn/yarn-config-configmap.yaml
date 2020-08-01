@@ -31,3 +31,4 @@ data:
   CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.node-locality-delay: "40"
   CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.queue-mappings: ""
   CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.queue-mappings-override.enable: "false"
+  YARN-SITE.XML_yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage: "100"

@@ -19,20 +19,6 @@ spec:
         app: hdfs
         component: datanode
     spec:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: component
-                operator: In
-                values:
-                - datanode
-              - key: app
-                operator: In
-                values:
-                - hdfs
-            topologyKey: kubernetes.io/hostname
       containers:
       - name: hdfs-datanode
         image: flokkr/hadoop
@@ -52,15 +38,5 @@ spec:
       - name: config
         configMap:
           name: hdfs-config
-      nodeSelector:
-        partition: lower
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      storageClassName: local-path
-      resources:
-        requests:
-          storage: 2Gi
+      - name: data
+        emptyDir: {}

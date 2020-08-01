@@ -1,28 +1,14 @@
 source:
-  - url: git::https://github.com/flokkr/k8s.git
-  - url: git::https://github.com/flokkr/infra-flekszible.git
-  - url: git::https://github.com/elek/ozone-flekszible.git
+  - url: git::https://github.com/flokkr/docker-ozone.git?ref=dev-0.6.0
+  - url: git::https://github.com/flokkr/docker-hadoop.git
   - path: ../flekszible
 import:
   - path: util
   - path: hadoop
-  - path: spark
-    destination: spark
-    transformations:
-    - type: image
-      image: flokkr/spark:2.4.4
-    - type: hadoop/distribute
-      image: flokkr/hadoop
-    - type: ozone/client-config
-    - type: ozone/ozonefs
-      image: elek/ozone:0.5.0-rc2-beta
-    - type: yarn/config
-    - type: hdfs/config
   - path: mapreduce
-    destination: mr
     transformations:
     - type: ozone/ozonefs
-      image: elek/ozone:0.5.0-rc2-beta
+      image: elek/ozone-dev:30ec0e2d0
     - type: perftest/runconfigmap
       configmap:  teragen-testscript
       scriptname: teragen.sh
@@ -30,53 +16,25 @@ import:
     destination: yarn
     transformations:
     - type: ozone/ozonefs
-      image: elek/ozone:0.5.0-rc2-beta
+      image: elek/ozone-dev:30ec0e2d0
+    - type: ozone/client-config
     - type: PublishService
     - type: add
       path:
-       - spec
-       - template
-       - spec
+        - data
       value:
-         nodeSelector:
-            partition: upper
+         YARN-SITE.XML_yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage: "100"
   - path: ozone
     destination: ozone
     transformations:
     - type: perftest/jvm
     - type: perftest/tuning
-#    - type: add
-#      trigger:
-#         metadata:
-#            name: ozone-config
-#      path:
-#        - data
-#      value:
-#        OZONE-SITE.XML_ozone.scm.chunk.layout: FILE_PER_CHUNK
     - type: remove
       path:
         - data
         - CORE-SITE.XML_fs.defaultFS
     - type: image
-      image: elek/ozone:0.5.0-rc2-beta
-    - type: ozone/pvstorage
-    - type: add
-      path:
-        - spec
-        - template
-        - spec
-      value:
-        nodeSelector:
-           partition: lower
+      image: elek/ozone-dev:30ec0e2d0
   - path: hdfs
     destination: hdfs
-    transformations:
-    - type: perftest/pvdata
-    - type: add
-      path:
-        - spec
-        - template
-        - spec
-      value:
-        nodeSelector:
-           partition: lower
+  - path: ozone-client

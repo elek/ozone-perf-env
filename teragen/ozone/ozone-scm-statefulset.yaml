@@ -25,7 +25,7 @@ spec:
     spec:
       initContainers:
       - name: init
-        image: elek/ozone:0.5.0-rc2-beta
+        image: elek/ozone-dev:30ec0e2d0
         args:
         - ozone
         - scm
@@ -33,37 +33,21 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
-        - name: storage
-          mountPath: /data/storage
         envFrom:
         - configMapRef:
             name: ozone-config
       containers:
       - name: scm
-        image: elek/ozone:0.5.0-rc2-beta
+        image: elek/ozone-dev:30ec0e2d0
         args:
         - ozone
         - scm
         volumeMounts:
         - name: data
           mountPath: /data
-        - name: storage
-          mountPath: /data/storage
         envFrom:
         - configMapRef:
             name: ozone-config
       volumes:
       - name: data
         emptyDir: {}
-      nodeSelector:
-        partition: lower
-  volumeClaimTemplates:
-  - metadata:
-      name: storage
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      storageClassName: local-path
-      resources:
-        requests:
-          storage: 2Gi
