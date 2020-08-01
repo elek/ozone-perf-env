@@ -34,5 +34,5 @@ $ROWS $OUTPUT_DIR
 #-Dio.file.buffer.size=131072 \
 
 done
-
+echo "Test is Done"
 sleep 10000000
