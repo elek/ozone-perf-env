@@ -8,10 +8,14 @@ mkdir -p results
 # shellcheck source=/dev/null
 source "../testlib.sh"
 
+#kubectl delete -f yarn-teragen-deployment.yaml
+#kubectl delete -f yarn-services
+
 reset_k8s_env
 
-flekszible generate -t hdfs/onenode
+flekszible generate #-t hdfs/onenode
 
+kubectl apply -f btm-configmap.yaml
 kubectl apply -f hdfs-services
 kubectl apply -f yarn-services
 

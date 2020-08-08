@@ -10,8 +10,9 @@ source "../testlib.sh"
 
 reset_k8s_env
 
-flekszible generate -t ozone/onenode
+flekszible generate #-t ozone/onenode
 
+kubectl apply -f btm-configmap.yaml
 kubectl apply -f ozone-services
 kubectl apply -f yarn-services
 

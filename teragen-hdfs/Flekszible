@@ -1,7 +1,9 @@
 source:
   - url: git::https://github.com/flokkr/docker-hadoop.git
   - path: ../flekszible
+  - path: ../../flokkr/incubator/byteman
 import:
+  - path: byteman
   - path: util
   - path: hadoop
   - path: mapreduce
@@ -31,4 +33,51 @@ import:
         - data
       value:
          CORE-SITE.XML_fs.defaultFS: hdfs://hdfs-namenode-0.hdfs-namenode:9820/
- 
+transformations:
+  - type: byteman/install 
+  - type: add
+    path:
+    - spec
+    - template
+    - spec
+    - containers
+    - .*
+    - volumeMounts
+    value:
+        - name: btm
+          mountPath: /opt/btm
+  - type: add
+    path:
+    - spec
+    - template
+    - spec
+    - volumes
+    value:
+        - name: btm
+          configMap:
+             name: btm
+             defaultMode: 0755
+  - type: add
+    path:
+    - spec
+    - template
+    - spec
+    - containers
+    - .*
+    - env
+    value:
+        name: HADOOP_OPTS
+        value: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
+  - type: add
+    trigger:
+       metadata:
+          name: yarn-config
+    path:
+      - data
+    value:
+      MAPRED-SITE.XML_mapred.map.java.opts: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
+      MAPRED-SITE.XML_mapred.reduce.java.opts: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
+      MAPRED-SITE.XML_mapred.child.java.opts: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
+#      MAPRED-SITE.XML_yarn.app.mapreduce.am.env: HADOOP_MAPRED_HOME=/opt/hadoop,HADOOP_OPTS=-javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
+#      MAPRED-SITE.XML_mapreduce.map.env: HADOOP_MAPRED_HOME=/opt/hadoop,HADOOP_OPTS=-javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
+#      MAPRED-SITE.XML_mapreduce.reduce.env: HADOOP_MAPRED_HOME=/opt/hadoop,HADOOP_OPTS=-javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
