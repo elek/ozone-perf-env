@@ -1,0 +1,31 @@
+ozone freon dfsg -n 1000 --copy-buffer=1 --path=hdfs://hdfs-namenode-0.hdfs-namenode:9820/
+2020-08-09 18:42:22 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:22 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:22 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:22 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:22 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:22 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:23 INFO  ProgressBar:163 - Progress: 98.70 % (987 out of 1000)
+2020-08-09 18:42:23 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:23 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:23 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:23 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:23 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:23 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:23 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:23 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:24 INFO  ProgressBar:163 - Progress: 100.00 % (1000 out of 1000)
+Closing file system instance: 736450849
+   write.call: 10240000
+   write.allTime: 36016
+   hsync.call: 0
+   hsync.allTime: 0
+   hflush.call: 0
+   hflush.allTime: 0
+   close.call: 1000
+   close.allTime: 41236
+2020-08-09 18:42:24 INFO  metrics:107 - type=TIMER, name=file-create, count=1000, min=48.913275, max=565.449412, mean=131.33391440668896, stddev=53.45380051923745, median=129.657774, p75=140.778507, p95=182.803074, p98=232.461206, p99=541.374655, p999=565.375817, mean_rate=69.96194513533483, m1=71.24775127807578, m5=70.89255985859894, m15=70.83102485117257, rate_unit=events/second, duration_unit=milliseconds
+2020-08-09 18:42:24 INFO  BaseFreonGenerator:75 - Total execution time (sec): 15
+2020-08-09 18:42:24 INFO  BaseFreonGenerator:75 - Failures: 0
+2020-08-09 18:42:24 INFO  BaseFreonGenerator:75 - Successful executions: 1000
+Process exited with exit code 0

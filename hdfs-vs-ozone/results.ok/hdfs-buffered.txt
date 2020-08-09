@@ -1,0 +1,31 @@
+ozone freon dfsg -n 1000 --path=hdfs://hdfs-namenode-0.hdfs-namenode:9820
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:47 INFO  SaslDataTransferClient:239 - SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+2020-08-09 18:42:48 INFO  ProgressBar:163 - Progress: 100.00 % (1000 out of 1000)
+Closing file system instance: 1339115065
+   write.call: 3000
+   write.allTime: 163
+   hsync.call: 0
+   hsync.allTime: 0
+   hflush.call: 0
+   hflush.allTime: 0
+   close.call: 1000
+   close.allTime: 44860
+2020-08-09 18:42:48 INFO  metrics:107 - type=TIMER, name=file-create, count=1000, min=40.973048, max=457.772844, mean=62.54905244903926, stddev=32.3823494783778, median=57.192912, p75=58.102662, p95=99.451825, p98=149.664035, p99=275.342228, p999=449.34225, mean_rate=137.7938951751068, m1=157.6, m5=157.6, m15=157.6, rate_unit=events/second, duration_unit=milliseconds
+2020-08-09 18:42:48 INFO  BaseFreonGenerator:75 - Total execution time (sec): 8
+2020-08-09 18:42:48 INFO  BaseFreonGenerator:75 - Failures: 0
+2020-08-09 18:42:48 INFO  BaseFreonGenerator:75 - Successful executions: 1000
+Process exited with exit code 0

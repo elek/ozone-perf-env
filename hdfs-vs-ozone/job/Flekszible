@@ -1,0 +1,44 @@
+source:
+  - url: git::https://github.com/flokkr/docker-hadoop.git
+  - url: git::https://github.com/flokkr/docker-ozone.git
+  - path: ../../flekszible
+  - path: ../../../flokkr/incubator/byteman
+import:
+  - path: byteman
+  - path: ozone-client
+transformations:
+  - type: ozone/client-config
+  - type: byteman/install 
+  - type: add
+    path:
+    - spec
+    - template
+    - spec
+    - containers
+    - .*
+    - volumeMounts
+    value:
+        - name: btm
+          mountPath: /opt/btm
+  - type: add
+    path:
+    - spec
+    - template
+    - spec
+    - volumes
+    value:
+        - name: btm
+          configMap:
+             name: btm
+             defaultMode: 0755
+  - type: add
+    path:
+    - spec
+    - template
+    - spec
+    - containers
+    - .*
+    - env
+    value:
+        name: HADOOP_OPTS
+        value: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm

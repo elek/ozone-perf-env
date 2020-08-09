@@ -1,0 +1,61 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ozone-s3g
+  labels:
+    app: ozone
+    component: s3g
+spec:
+  selector:
+    matchLabels:
+      app: ozone
+      component: s3g
+  serviceName: ozone-s3g
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ozone
+        component: s3g
+    spec:
+      containers:
+      - name: s3g
+        image: elek/ozone-dev
+        args:
+        - ozone
+        - s3g
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: byteman
+          mountPath: /opt/byteman
+        - name: btm
+          mountPath: /opt/btm
+        envFrom:
+        - configMapRef:
+            name: ozone-config
+        env:
+        - name: BYTEMAN_HOME
+          value: /opt/byteman
+        - name: HADOOP_OPTS
+          value: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: byteman
+        emptyDir: {}
+      - name: btm
+        configMap:
+          name: btm
+          defaultMode: 493
+      initContainers:
+      - name: byteman-copy
+        image: elek/byteman
+        command:
+        - bash
+        - -c
+        - cp -r /tmp/byteman /opt/
+        volumeMounts:
+        - name: byteman
+          mountPath: /opt/byteman
