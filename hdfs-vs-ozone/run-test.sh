@@ -14,10 +14,10 @@ run_test_job() {
 }
 
 export HADOOP_USER_NAME=root
-run_test_job "ozone-single-byte" "ozone freon dfsg -n 1000 --copy-buffer=1"
-run_test_job "ozone-buffered" "ozone freon dfsg -n 1000"
+run_test_job "ozone-single-byte" "ozone freon dfsg -n 10000 --copy-buffer=1"
+run_test_job "ozone-buffered" "ozone freon dfsg -n 10000"
 
 
 export HADOOP_USER_NAME=hadoop
-run_test_job "hdfs-single-byte" "ozone freon dfsg -n 1000 --copy-buffer=1 --path=hdfs://hdfs-namenode-0.hdfs-namenode:9820/"
-run_test_job "hdfs-buffered" "ozone freon dfsg -n 1000 --path=hdfs://hdfs-namenode-0.hdfs-namenode:9820"
+run_test_job "hdfs-single-byte" "ozone freon dfsg -n 10000 --copy-buffer=1 --path=hdfs://hdfs-namenode-0.hdfs-namenode:9820/"
+run_test_job "hdfs-buffered" "ozone freon dfsg -n 10000 --path=hdfs://hdfs-namenode-0.hdfs-namenode:9820"
