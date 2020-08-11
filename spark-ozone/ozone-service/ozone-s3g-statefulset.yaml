@@ -1,0 +1,53 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ozone-s3g
+  labels:
+    app: ozone
+    component: s3g
+spec:
+  selector:
+    matchLabels:
+      app: ozone
+      component: s3g
+  serviceName: ozone-s3g
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ozone
+        component: s3g
+    spec:
+      containers:
+      - name: s3g
+        image: flokkr/ozone
+        args:
+        - ozone
+        - s3g
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        envFrom:
+        - configMapRef:
+            name: ozone-config
+        env:
+        - name: HADOOP_CLASSPATH
+          value: /opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: ozonefs
+        emptyDir: {}
+      initContainers:
+      - name: ozonefscopy
+        image: elek/ozone-dev:latest
+        command:
+        - bash
+        - -c
+        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop3-*.jar /opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+        volumeMounts:
+        - name: ozonefs
+          mountPath: /opt/ozonefs

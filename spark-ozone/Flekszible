@@ -1,0 +1,14 @@
+source:
+ - url: git::https://github.com/flokkr/docker-ozone.git?ref=dev-0.6.0
+import:
+ - path: ozone-client
+ - path: ozone
+   destination: ozone-services
+transformations:
+  - type: ozone/client-config
+    trigger:
+       metadata:
+          name: test-runner
+  - type: ozone/ozonefs
+    image: elek/ozone-dev:latest
+  

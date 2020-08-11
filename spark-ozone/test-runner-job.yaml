@@ -1,0 +1,39 @@
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-runner
+spec:
+  template:
+    metadata:
+      name: test-runner
+    spec:
+      restartPolicy: Never
+      containers:
+      - image: flokkr/spark-hadoop3:3.0.0
+        name: test
+        args:
+        - sleep
+        - infinity
+        envFrom:
+        - configMapRef:
+            name: ozone-client-config
+        volumeMounts:
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        env:
+        - name: HADOOP_CLASSPATH
+          value: /opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+      initContainers:
+      - name: ozonefscopy
+        image: elek/ozone-dev:latest
+        command:
+        - bash
+        - -c
+        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop3-*.jar /opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+        volumeMounts:
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+      volumes:
+      - name: ozonefs
+        emptyDir: {}
