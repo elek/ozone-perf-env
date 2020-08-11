@@ -10,8 +10,9 @@ source "../testlib.sh"
 
 reset_k8s_env
 
-flekszible generate -t ozone/onenode
+flekszible generate #-t ozone/onenode
 
+kubectl apply -f btm-configmap.yaml
 kubectl apply -f ozone-services
 kubectl apply -f yarn-services
 
@@ -29,4 +30,4 @@ TEST_POD=$(kubectl get pods -o go-template --template '{{range .items}}{{.metada
 
 MAX_RETRY=100 retry grep_log $TEST_POD "Test is Done"
 
-kubectl logs --tail=20 $TEST_POD | tee results/hdfs.txt
+kubectl logs --tail=-1 $TEST_POD | tee results/ozone.txt

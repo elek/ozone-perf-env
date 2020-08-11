@@ -8,10 +8,14 @@ mkdir -p results
 # shellcheck source=/dev/null
 source "../testlib.sh"
 
+#kubectl delete -f yarn-teragen-deployment.yaml
+#kubectl delete -f yarn-services
+
 reset_k8s_env
 
-flekszible generate -t hdfs/onenode
+flekszible generate #-t hdfs/onenode
 
+kubectl apply -f btm-configmap.yaml
 kubectl apply -f hdfs-services
 kubectl apply -f yarn-services
 
@@ -26,4 +30,4 @@ TEST_POD=$(kubectl get pods -o go-template --template '{{range .items}}{{.metada
 
 MAX_RETRY=100 retry grep_log $TEST_POD "Test is Done"
 
-kubectl logs --tail=20 $TEST_POD | tee results/hdfs.txt
+kubectl logs --tail=-1 $TEST_POD | tee results/hdfs.txt
