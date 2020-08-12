@@ -70,7 +70,8 @@ spec:
           value: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
       volumes:
       - name: data
-        emptyDir: {}
+        emptyDir:
+          medium: Memory
       - name: byteman
         emptyDir: {}
       - name: btm

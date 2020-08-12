@@ -7,22 +7,6 @@ import:
   - path: byteman
   - path: util
   - path: hadoop
-  - path: mapreduce
-    transformations:
-    - type: ozone/ozonefs
-      image: elek/ozone-dev:30ec0e2d0
-    - type: perftest/runconfigmap
-      configmap:  teragen-testscript
-      scriptname: teragen.sh
-    - type: ozone/client-config
-    - type: add
-      trigger:
-         metadata:
-            name: yarn-config
-      path:
-         - data
-      value:
-         CORE-SITE.XML_fs.defaultFS: "o3fs://bucket1.vol1/"
   - path: yarn
     destination: yarn-services
     transformations:
@@ -39,11 +23,19 @@ import:
   - path: ozone
     destination: ozone-services
     transformations:
+    - type: ozone/memdisk
     - type: perftest/jvm
     - type: perftest/tuning
     - type: image
       image: elek/ozone-dev:30ec0e2d0
   - path: ozone-client
+  - path: job
+    destination: tester
+    transformations:
+    - type: yarn/config
+    - type: ozone/client-config
+    - type: ozone/ozonefs
+      image: elek/ozone-dev
 transformations:
   - type: byteman/install 
   - type: add

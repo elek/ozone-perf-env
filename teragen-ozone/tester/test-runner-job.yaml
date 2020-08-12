@@ -1,43 +1,33 @@
 
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: yarn-teragen
-  labels:
-    app: yarn
-    component: teragen
+  name: test-runner
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: yarn
-      component: teragen
   template:
     metadata:
-      labels:
-        app: yarn
-        component: teragen
+      name: test-runner
     spec:
+      restartPolicy: Never
       containers:
-      - name: teragen
-        image: flokkr/hadoop
+      - image: flokkr/hadoop:latest
+        name: test
+        args:
+        - /opt/tests/teragen.sh
+        volumeMounts:
+        - name: tests
+          mountPath: /opt/tests
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        - name: byteman
+          mountPath: /opt/byteman
+        - name: btm
+          mountPath: /opt/btm
         envFrom:
         - configMapRef:
             name: yarn-config
         - configMapRef:
             name: ozone-client-config
-        - configMapRef:
-            name: ozone-config
-        volumeMounts:
-        - name: ozonefs
-          mountPath: /opt/ozonefs
-        - name: script
-          mountPath: /opt/script/teragen.sh
-          subPath: teragen.sh
-        - name: byteman
-          mountPath: /opt/byteman
-        - name: btm
-          mountPath: /opt/btm
         env:
         - name: HADOOP_CLASSPATH
           value: /opt/ozonefs/hadoop-ozone-filesystem.jar
@@ -45,11 +35,22 @@ spec:
           value: /opt/byteman
         - name: HADOOP_OPTS
           value: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
-        args:
-        - /opt/script/teragen.sh
+      volumes:
+      - name: tests
+        configMap:
+          name: teragen-testscript
+          defaultMode: 493
+      - name: ozonefs
+        emptyDir: {}
+      - name: byteman
+        emptyDir: {}
+      - name: btm
+        configMap:
+          name: btm
+          defaultMode: 493
       initContainers:
       - name: ozonefscopy
-        image: elek/ozone-dev:30ec0e2d0
+        image: elek/ozone-dev
         command:
         - bash
         - -c
@@ -59,9 +60,6 @@ spec:
           mountPath: /opt/ozonefs
         - name: byteman
           mountPath: /opt/byteman
-        envFrom:
-        - configMapRef:
-            name: ozone-client-config
       - name: byteman-copy
         image: elek/byteman
         command:
@@ -71,16 +69,3 @@ spec:
         volumeMounts:
         - name: byteman
           mountPath: /opt/byteman
-      volumes:
-      - name: ozonefs
-        emptyDir: {}
-      - name: script
-        configMap:
-          name: teragen-testscript
-          defaultMode: 493
-      - name: byteman
-        emptyDir: {}
-      - name: btm
-        configMap:
-          name: btm
-          defaultMode: 493

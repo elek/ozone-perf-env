@@ -24,10 +24,4 @@ kubectl exec ozone-scm-0 -- ozone sh bucket create /vol1/bucket1
 
 kubectl apply -f .
 
-kubectl wait pod --for=condition=Ready -l app=yarn,component=teragen
-
-TEST_POD=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' -l component=teragen)
-
-MAX_RETRY=100 retry grep_log $TEST_POD "Test is Done"
-
-kubectl logs --tail=-1 $TEST_POD | tee results/ozone.txt
+./run_test.sh
