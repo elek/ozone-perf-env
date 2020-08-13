@@ -66,6 +66,7 @@ all_pods_are_running() {
 reset_k8s_env() {
    print_phase "Reset K8s environment"
    #reset environment
+   kubectl delete job --all
    kubectl delete statefulset --all
    kubectl delete daemonset --all
    kubectl delete deployment --all
