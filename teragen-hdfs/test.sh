@@ -24,10 +24,7 @@ retry grep_log hdfs-namenode-0 "Adding new storage ID"
 
 kubectl apply -f .
 
-kubectl wait pod --for=condition=Ready -l app=yarn,component=teragen
+kubectl apply -f .
 
-TEST_POD=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' -l component=teragen)
+TEST_MAPPERS=2 ./run_test.sh
 
-MAX_RETRY=100 retry grep_log $TEST_POD "Test is Done"
-
-kubectl logs --tail=-1 $TEST_POD | tee results/hdfs.txt

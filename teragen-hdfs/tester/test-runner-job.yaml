@@ -1,0 +1,29 @@
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-runner
+spec:
+  template:
+    metadata:
+      name: test-runner
+    spec:
+      restartPolicy: Never
+      containers:
+      - image: flokkr/hadoop:latest
+        name: test
+        args:
+        - /opt/tests/teragen.sh
+        volumeMounts:
+        - name: tests
+          mountPath: /opt/tests
+        envFrom:
+        - configMapRef:
+            name: yarn-config
+        - configMapRef:
+            name: hdfs-config
+      volumes:
+      - name: tests
+        configMap:
+          name: teragen-testscript
+          defaultMode: 493

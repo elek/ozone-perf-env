@@ -31,10 +31,6 @@ spec:
         env:
         - name: WAITFOR
           value: yarn-resourcemanager-0.yarn-resourcemanager:8031
-        - name: BYTEMAN_HOME
-          value: /opt/byteman
-        - name: HADOOP_OPTS
-          value: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
         envFrom:
         - configMapRef:
             name: yarn-config
@@ -43,26 +39,6 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
-        - name: byteman
-          mountPath: /opt/byteman
-        - name: btm
-          mountPath: /opt/btm
       volumes:
       - name: data
         emptyDir: {}
-      - name: byteman
-        emptyDir: {}
-      - name: btm
-        configMap:
-          name: btm
-          defaultMode: 493
-      initContainers:
-      - name: byteman-copy
-        image: elek/byteman
-        command:
-        - bash
-        - -c
-        - cp -r /tmp/byteman /opt/
-        volumeMounts:
-        - name: byteman
-          mountPath: /opt/byteman

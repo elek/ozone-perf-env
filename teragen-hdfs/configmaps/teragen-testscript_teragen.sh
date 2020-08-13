@@ -35,4 +35,3 @@ $ROWS $OUTPUT_DIR
 
 done
 echo "Test is Done"
-sleep 10000000
