@@ -26,5 +26,5 @@ kubectl apply -f .
 
 kubectl apply -f .
 
-TEST_MAPPERS=2 ./run_test.sh
+TEST_MAPPERS=30 ./run_test.sh
 
