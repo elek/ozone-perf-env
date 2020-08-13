@@ -33,10 +33,31 @@ data:
       System.out.println("   hflush.call: " + readCounter("hflush.call"));
       System.out.println("   hflush.allTime: " + readCounter("hflush.allTime"));
       System.out.println("   close.call: " + readCounter("close.call"));
-      System.out.println("   close.allTime: " + readCounter("close.allTime"))
-
+      System.out.println("   close.allTime: " + readCounter("close.allTime"));
+      System.out.println("   watchForCommit.call: " + readCounter("watchForCommit.call"));
+      System.out.println("   watchForCommit.allTime: " + readCounter("watchForCommit.allTime"))
 
     ENDRULE
+
+    RULE BlockOutputStream.watchForCommit.Entry
+    CLASS org.apache.hadoop.hdds.scm.storage.BlockOutputStream
+    METHOD watchForCommit
+    AT ENTRY
+    IF TRUE
+    DO resetTimer(Thread.currentThread());
+       incrementCounter("watchForCommit.call")
+    ENDRULE
+
+    RULE BlockOutputStream.watchForCommit.Exit
+    CLASS org.apache.hadoop.hdds.scm.storage.BlockOutputStream
+    METHOD watchForCommit
+    AT EXIT
+    BIND elapsedTime = java.lang.Math.toIntExact(getElapsedTimeFromTimer(Thread.currentThread()))
+    IF TRUE
+    DO
+       incrementCounter("watchForCommit.allTime", elapsedTime)
+    ENDRULE
+
 
     RULE DataOutputStream.Write.Entry
     CLASS ^FSDataOutputStream$PositionCache

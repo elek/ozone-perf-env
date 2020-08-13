@@ -1,0 +1,13 @@
+name: java-async-profiler
+---
+  - type: java-async-profiler/install
+  - type: add
+    trigger:
+       metadata:
+          name: yarn-config
+    path:
+      - data
+    value:
+      MAPRED-SITE.XML_mapred.map.java.opts: -agentpath:/opt/java-async-profiler/build/libasyncProfiler.so=start,file=/tmp/profile-%t-%p.svg
+      MAPRED-SITE.XML_mapred.reduce.java.opts: -agentpath:/opt/java-async-profiler/build/libasyncProfiler.so=start,file=/tmp/profile-%t-%p.svg
+      MAPRED-SITE.XML_mapred.child.java.opts: -agentpath:/opt/java-async-profiler/build/libasyncProfiler.so=start,file=/tmp/profile-%t-%p.svg

@@ -24,4 +24,4 @@ kubectl exec ozone-scm-0 -- ozone sh bucket create /vol1/bucket1
 
 kubectl apply -f .
 
-./run_test.sh
+TEST_MAPPERS=2 ./run_test.sh

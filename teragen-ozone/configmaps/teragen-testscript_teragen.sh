@@ -2,7 +2,7 @@
 
 set -x
 
-ROWS=$(numfmt --from=auto --to-unit=100 ${TEST_SIZE:-10G})
+ROWS=$(numfmt --from=auto --to-unit=100 ${TEST_SIZE:-100G})
 MR_EXAMPLES_JAR=/opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.1.jar
 
 OUTPUT_DIR=teragen-$(shuf -i 1000-2000 -n 1)
@@ -33,4 +33,3 @@ $ROWS $OUTPUT_DIR
 #-Dio.file.buffer.size=131072 \
 
 echo "Test is Done"
-sleep infinity
