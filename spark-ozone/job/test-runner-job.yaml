@@ -15,4 +15,10 @@ spec:
         args:
         - sleep
         - infinity
-      
+        volumeMounts:
+          - mountPath: /opt/testscripts
+            name: testscripts
+      volumes:
+        - name: testscripts
+          configMap:
+              name: testscripts

@@ -1,44 +1,35 @@
 
-apiVersion: apps/v1
-kind: StatefulSet
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: ozone-s3g
-  labels:
-    app: ozone
-    component: s3g
+  name: test-runner
 spec:
-  selector:
-    matchLabels:
-      app: ozone
-      component: s3g
-  serviceName: ozone-s3g
-  replicas: 1
   template:
     metadata:
-      labels:
-        app: ozone
-        component: s3g
+      name: test-runner
     spec:
+      restartPolicy: Never
       containers:
-      - name: s3g
-        image: flokkr/ozone
+      - image: flokkr/spark-hadoop3:3.0.0
+        name: test
         args:
-        - ozone
-        - s3g
+        - sleep
+        - infinity
         volumeMounts:
-        - name: data
-          mountPath: /data
+        - mountPath: /opt/testscripts
+          name: testscripts
         - name: ozonefs
           mountPath: /opt/ozonefs
         envFrom:
         - configMapRef:
-            name: ozone-config
+            name: ozone-client-config
         env:
         - name: HADOOP_CLASSPATH
           value: /opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
       volumes:
-      - name: data
-        emptyDir: {}
+      - name: testscripts
+        configMap:
+          name: testscripts
       - name: ozonefs
         emptyDir: {}
       initContainers:

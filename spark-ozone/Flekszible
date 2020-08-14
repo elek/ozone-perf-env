@@ -4,11 +4,10 @@ import:
  - path: ozone-client
  - path: ozone
    destination: ozone-services
-transformations:
-  - type: ozone/client-config
-    trigger:
-       metadata:
-          name: test-runner
-  - type: ozone/ozonefs
-    image: elek/ozone-dev:latest
+ - path: job
+   destination: test-runner
+   transformations:
+   - type: ozone/client-config
+   - type: ozone/ozonefs
+     image: elek/ozone-dev:latest
   
