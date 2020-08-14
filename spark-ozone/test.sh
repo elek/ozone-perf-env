@@ -21,5 +21,5 @@ kubectl exec ozone-scm-0 -- ozone sh volume create /vol1
 kubectl exec ozone-scm-0 -- ozone sh bucket create /vol1/bucket1
 kubectl exec ozone-scm-0 -- ozone sh key put /vol1/bucket1/key1 README.md
 
-
+kubectl apply -f .
 

@@ -4,10 +4,13 @@ import:
  - path: ozone-client
  - path: ozone
    destination: ozone-services
+   transformations:
+     - type: image
+       image: elek/ozone-dev:256db2a74
  - path: job
    destination: tester
    transformations:
    - type: ozone/client-config
    - type: ozone/ozonefs
-     image: elek/ozone-dev:latest
+     image: elek/ozone-dev:256db2a74
   

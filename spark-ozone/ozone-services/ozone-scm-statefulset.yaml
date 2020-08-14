@@ -25,7 +25,7 @@ spec:
     spec:
       initContainers:
       - name: init
-        image: flokkr/ozone
+        image: elek/ozone-dev:256db2a74
         args:
         - ozone
         - scm
@@ -38,7 +38,7 @@ spec:
             name: ozone-config
       containers:
       - name: scm
-        image: flokkr/ozone
+        image: elek/ozone-dev:256db2a74
         args:
         - ozone
         - scm

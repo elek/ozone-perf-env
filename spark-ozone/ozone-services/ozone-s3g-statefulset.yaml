@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: s3g
-        image: flokkr/ozone
+        image: elek/ozone-dev:256db2a74
         args:
         - ozone
         - s3g
