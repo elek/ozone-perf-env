@@ -5,7 +5,7 @@ import:
  - path: ozone
    destination: ozone-services
  - path: job
-   destination: test-runner
+   destination: tester
    transformations:
    - type: ozone/client-config
    - type: ozone/ozonefs
