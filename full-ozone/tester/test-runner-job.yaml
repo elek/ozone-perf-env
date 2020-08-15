@@ -1,0 +1,41 @@
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: ozone
+    component: test
+  name: test-runner
+spec:
+  template:
+    metadata:
+      labels:
+        app: ozone
+        component: test
+      name: test-runner
+    spec:
+      restartPolicy: Never
+      containers:
+      - image: flokkr/ozone:latest
+        name: test
+        args:
+        - /opt/tests/teragen.sh
+        volumeMounts:
+        - name: java-async-profiler
+          mountPath: /opt/java-async-profiler
+        env:
+        - name: HADOOP_OPTS
+          value: -agentpath:/opt/java-async-profiler/build/libasyncProfiler.so=start,file=/tmp/profile-%t-%p.svg
+      initContainers:
+      - name: java-async-profiler-copy
+        image: elek/java-async-profiler
+        command:
+        - bash
+        - -c
+        - cp -r /opt/java-async-profiler/* /tmp/java-async-profiler/
+        volumeMounts:
+        - name: java-async-profiler
+          mountPath: /tmp/java-async-profiler
+      volumes:
+      - name: java-async-profiler
+        emptyDir: {}

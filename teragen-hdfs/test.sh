@@ -8,9 +8,6 @@ mkdir -p results
 # shellcheck source=/dev/null
 source "../testlib.sh"
 
-#kubectl delete -f yarn-teragen-deployment.yaml
-#kubectl delete -f yarn-services
-
 reset_k8s_env
 
 flekszible generate #-t hdfs/onenode

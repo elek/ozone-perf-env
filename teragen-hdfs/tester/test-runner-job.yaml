@@ -17,13 +17,38 @@ spec:
         volumeMounts:
         - name: tests
           mountPath: /opt/tests
+        - name: byteman
+          mountPath: /opt/byteman
+        - name: btm
+          mountPath: /opt/btm
         envFrom:
         - configMapRef:
             name: yarn-config
         - configMapRef:
             name: hdfs-config
+        env:
+        - name: BYTEMAN_HOME
+          value: /opt/byteman
+        - name: HADOOP_OPTS
+          value: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
       volumes:
       - name: tests
         configMap:
           name: teragen-testscript
           defaultMode: 493
+      - name: byteman
+        emptyDir: {}
+      - name: btm
+        configMap:
+          name: btm
+          defaultMode: 493
+      initContainers:
+      - name: byteman-copy
+        image: elek/byteman
+        command:
+        - bash
+        - -c
+        - cp -r /tmp/byteman /opt/
+        volumeMounts:
+        - name: byteman
+          mountPath: /opt/byteman

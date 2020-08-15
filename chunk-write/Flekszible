@@ -2,7 +2,6 @@ source:
   - url: github.com/flokkr/docker-ozone
   - path: ..
 import:
-    - path: util
     - path: ozone
       transformations:
          - type: ozone/profiler

@@ -1,10 +1,9 @@
 source:
   - url: git::https://github.com/flokkr/docker-hadoop.git
   - url: git::https://github.com/flokkr/docker-ozone.git
+  - url: git::https://github.com/elek/docker-byteman.git
   - path: ../flekszible
-  - path: ../../flokkr/incubator/byteman
 import:
-  - path: byteman
   - path: ozone
     transformations:
     - type: image

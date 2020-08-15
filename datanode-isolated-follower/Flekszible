@@ -2,7 +2,6 @@ source:
 - path: ../flekszible
 - url: github.com/flokkr/docker-ozone
 import:
-- path: util
 - path: ozone
   transformations:
   - type: namefilter

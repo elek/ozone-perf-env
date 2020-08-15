@@ -21,24 +21,30 @@ spec:
     spec:
       containers:
       - name: s3g
-        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
+        image: flokkr/ozone
         args:
         - ozone
         - s3g
         volumeMounts:
         - name: data
           mountPath: /data
+        - name: java-async-profiler
+          mountPath: /opt/java-async-profiler
         envFrom:
         - configMapRef:
             name: ozone-config
-        env:
-        - name: JAEGER_SAMPLER_TYPE
-          value: probabilistic
-        - name: JAEGER_SAMPLER_PARAM
-          value: "0.01"
-        - name: JAEGER_AGENT_HOST
-          value: jaeger-0.jaeger
       volumes:
       - name: data
-        emptyDir:
-          medium: Memory
+        emptyDir: {}
+      - name: java-async-profiler
+        emptyDir: {}
+      initContainers:
+      - name: java-async-profiler-copy
+        image: elek/java-async-profiler
+        command:
+        - bash
+        - -c
+        - cp -r /opt/java-async-profiler/* /tmp/java-async-profiler/
+        volumeMounts:
+        - name: java-async-profiler
+          mountPath: /tmp/java-async-profiler

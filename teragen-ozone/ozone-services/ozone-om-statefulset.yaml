@@ -25,7 +25,7 @@ spec:
     spec:
       initContainers:
       - name: init
-        image: elek/ozone-dev:bufferfix
+        image: elek/ozone-dev:66d85f303
         args:
         - ozone
         - om
@@ -36,21 +36,47 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
+        - name: byteman
+          mountPath: /opt/byteman
         envFrom:
         - configMapRef:
             name: ozone-config
+      - name: byteman-copy
+        image: elek/byteman
+        command:
+        - bash
+        - -c
+        - cp -r /tmp/byteman /opt/
+        volumeMounts:
+        - name: byteman
+          mountPath: /opt/byteman
       containers:
       - name: om
-        image: elek/ozone-dev:bufferfix
+        image: elek/ozone-dev:66d85f303
         args:
         - ozone
         - om
         volumeMounts:
         - name: data
           mountPath: /data
+        - name: byteman
+          mountPath: /opt/byteman
+        - name: btm
+          mountPath: /opt/btm
         envFrom:
         - configMapRef:
             name: ozone-config
+        env:
+        - name: BYTEMAN_HOME
+          value: /opt/byteman
+        - name: HADOOP_OPTS
+          value: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
       volumes:
       - name: data
         emptyDir: {}
+      - name: byteman
+        emptyDir: {}
+      - name: btm
+        configMap:
+          name: btm
+          defaultMode: 493

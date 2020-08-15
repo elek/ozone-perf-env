@@ -19,6 +19,10 @@ spec:
           mountPath: /opt/tests
         - name: ozonefs
           mountPath: /opt/ozonefs
+        - name: byteman
+          mountPath: /opt/byteman
+        - name: btm
+          mountPath: /opt/btm
         envFrom:
         - configMapRef:
             name: yarn-config
@@ -27,6 +31,10 @@ spec:
         env:
         - name: HADOOP_CLASSPATH
           value: /opt/ozonefs/hadoop-ozone-filesystem.jar
+        - name: BYTEMAN_HOME
+          value: /opt/byteman
+        - name: HADOOP_OPTS
+          value: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
       volumes:
       - name: tests
         configMap:
@@ -34,9 +42,15 @@ spec:
           defaultMode: 493
       - name: ozonefs
         emptyDir: {}
+      - name: byteman
+        emptyDir: {}
+      - name: btm
+        configMap:
+          name: btm
+          defaultMode: 493
       initContainers:
       - name: ozonefscopy
-        image: elek/ozone-dev
+        image: elek/ozone-dev:66d85f303
         command:
         - bash
         - -c
@@ -44,3 +58,14 @@ spec:
         volumeMounts:
         - name: ozonefs
           mountPath: /opt/ozonefs
+        - name: byteman
+          mountPath: /opt/byteman
+      - name: byteman-copy
+        image: elek/byteman
+        command:
+        - bash
+        - -c
+        - cp -r /tmp/byteman /opt/
+        volumeMounts:
+        - name: byteman
+          mountPath: /opt/byteman

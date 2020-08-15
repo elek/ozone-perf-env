@@ -1,6 +1,6 @@
-name: perftest
-import:
-  - path: ../util
+source:
+  - path: ../flekszible
+  - url: git::https://github.com/flokkr/docker-ozone.git
 transformations:
   - type: add
     trigger:
@@ -13,5 +13,3 @@ transformations:
   - type: image
     image: localhost:30510/elek/ozone-dev:b36a738
   - type: perftest/handlerfix
-#  - type: perftest/hdddata
-#    dir: /data/1/ozone

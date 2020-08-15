@@ -1,17 +1,16 @@
 source:
   - url: git::https://github.com/flokkr/docker-ozone.git?ref=dev-0.6.0
   - url: git::https://github.com/flokkr/docker-hadoop.git
-#  - url: git::https://github.com/elek/docker-java-async-profiler
-#  - url: git::https://github.com/elek/docker-byteman
+  - url: git::https://github.com/elek/docker-java-async-profiler
+  - url: git::https://github.com/elek/docker-byteman
   - path: ../flekszible
 import:
-  - path: util
   - path: hadoop
   - path: yarn
     destination: yarn-services
     transformations:
     - type: ozone/ozonefs
-      image: elek/ozone-dev:bufferfix
+      image: elek/ozone-dev:66d85f303
     - type: ozone/client-config
     - type: PublishService
     - type: add
@@ -26,7 +25,7 @@ import:
     - type: perftest/jvm
     - type: perftest/tuning
     - type: image
-      image: elek/ozone-dev:bufferfix
+      image: elek/ozone-dev:66d85f303
   - path: ozone-client
   - path: job
     destination: tester
@@ -34,4 +33,7 @@ import:
     - type: yarn/config
     - type: ozone/client-config
     - type: ozone/ozonefs
-      image: elek/ozone-dev
+      image: elek/ozone-dev:66d85f303
+transformations:
+   - type: byteman
+#  - type: java-async-profiler

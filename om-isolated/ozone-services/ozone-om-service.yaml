@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ozone-isolated-follower
+  name: ozone-om
 spec:
   ports:
-  - port: 9870
-    name: rpc
+  - port: 9874
+    name: ui
   clusterIP: None
   selector:
     app: ozone
-    component: isolated-follower
+    component: om

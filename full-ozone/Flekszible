@@ -1,84 +1,20 @@
 source:
-  - url: git::https://github.com/flokkr/infra-flekszible.git
-  - url: git::https://github.com/elek/ozone-flekszible.git
+  - url: git::https://github.com/flokkr/docker-ozone.git
+  - url: git::https://github.com/elek/docker-byteman
+  - url: git::https://github.com/elek/docker-java-async-profiler
+  - path: ../flekszible
 import:
-    - path: ../util
-    - path: jaeger
-      destination: jaeger
-      transformations:
-      - type: PublishService
     - path: ozone
       transformations:
-         - type: ozone/pvstorage
-           trigger:
-              kind: StatefulSet
-              metadata:
-                 name: ozone-datanode
-         - type: Add
-           path: 
+        - type: add
+          trigger:
+            metadata:
+              name: ozone-config
+          path:
             - data
-           value:
-              OZONE-SITE.XML_dfs.ratis.client.request.retry.interval: 15s
-              OZONE-SITE.XML_hdds.ratis.raft.server.write.element-limit: "4096"
-              OZONE-SITE.XML_hdds.datanode.df.refresh.period: 60m
-              OZONE-SITE.XML_hdds.datanode.du.factory.classname: org.apache.hadoop.hdds.fs.DedicatedDiskSpaceUsageFactory
-#         - type: perftest/hddstorage
-#           trigger:
-#              metadata:
-#                 label:
-#                    component: datanode
-#           dir: /data/1/storage
-         - type: perftest/jvm
-         - type: ozone/devtracing
-         - type: ozone/memdisk
-         - type: PublishStatefulSet
-         - type: Change
-           path:
-             - spec
-             - replicas
-           trigger:
-             metadata:
-                name: ozone-datanode
-           replacement: 6
-         - type: Add
-           path:
-             - spec
-           value:
-               podManagementPolicy: Parallel
-           trigger:
-              kind: Statefulset
-              metadata:
-                  name: ozone-datanode
-    - path: ozone/freon
-      destination: freon-ockg
-      transformations:
-         - type: ozone/devtracing
-         - type: Replace
-           path:
-             - spec
-             - template
-             - spec
-             - containers
-             - ozone
-             - args
-           value:
-             - ozone
-             - freon
-             - ockg
-             - -s10240
-             - -t5
-             - -n10000000
-    - path: sleep
-      destination: console
-      transformations:
-      - type: ozone/config
-      - type: image
-        image: 127.0.0.1:31961/elek/ozone-dev:783a38b
+          value:
+             LOG4J.PROPERTIES_log4j.logger.org.apache.ratis.server.impl.WatchRequests: DEBUG
+    - path: job
+      destination: tester
 transformations:
-  - type: Namespace
-  - type: image
-    image: 127.0.0.1:31961/elek/ozone-dev:783a38b
-    trigger:
-       metadata:
-         labels:
-            app: ozone
+  - type: java-async-profiler

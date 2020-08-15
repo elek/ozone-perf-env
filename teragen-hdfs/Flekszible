@@ -1,15 +1,9 @@
 source:
   - url: git::https://github.com/flokkr/docker-hadoop.git
+  - url: git::https://github.com/elek/docker-byteman
   - path: ../flekszible
 import:
-  - path: util
   - path: hadoop
-  - path: mapreduce
-    transformations:
-    - type: perftest/runconfigmap
-      configmap:  teragen-testscript
-      scriptname: teragen.sh
-    - type: hdfs/config
   - path: yarn
     destination: yarn-services
     transformations:
@@ -36,3 +30,5 @@ import:
     transformations:
     - type: yarn/config
     - type: hdfs/config
+transformations:
+ - type: byteman
