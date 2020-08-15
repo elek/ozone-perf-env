@@ -4,6 +4,20 @@ name: java-async-profiler
   - type: add
     trigger:
        metadata:
+          name: test-runner
+    path:
+      - spec
+      - template
+      - spec
+      - containers
+      - .*
+      - env
+    value:
+        - name: HADOOP_OPTS
+          value: -agentpath:/opt/java-async-profiler/build/libasyncProfiler.so=start,file=/tmp/profile-%t-%p.svg
+  - type: add
+    trigger:
+       metadata:
           name: yarn-config
     path:
       - data

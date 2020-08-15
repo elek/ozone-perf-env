@@ -1,0 +1,10 @@
+name: ozonelocal
+---
+- type: mount
+  hostPath: /home/elek/projects/ozone/hadoop-ozone/dist/target/ozone-0.6.0-SNAPSHOT
+  path: /opt/ozone
+  trigger:
+    metadata:
+       labels:
+          app: ozone
+- type: ozone/onenode
