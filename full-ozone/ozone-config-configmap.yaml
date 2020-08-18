@@ -19,6 +19,6 @@ data:
   LOG4J.PROPERTIES_log4j.appender.stdout: org.apache.log4j.ConsoleAppender
   LOG4J.PROPERTIES_log4j.appender.stdout.layout: org.apache.log4j.PatternLayout
   LOG4J.PROPERTIES_log4j.appender.stdout.layout.ConversionPattern: '%d{yyyy-MM-dd
-    HH:mm:ss} %-5p %c{1}:%L - %m%n'
+    HH:mm:ss.SSS} %-5p %c{1}:%L - %m%n'
   MAPRED-SITE.XML_mapreduce.application.classpath: /opt/hadoop/share/hadoop/mapreduce/*:/opt/hadoop/share/hadoop/mapreduce/lib/*:/opt/ozonefs/hadoop-ozone-filesystem-lib-current-0.5.0-SNAPSHOT.jar
-  LOG4J.PROPERTIES_log4j.logger.org.apache.ratis.server.impl.WatchRequests: DEBUG
+  OZONE-SITE.XML_dfs.ratis.leader.election.minimum.timeout.duration: 100ms

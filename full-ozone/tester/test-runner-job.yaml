@@ -20,22 +20,33 @@ spec:
         name: test
         args:
         - /opt/tests/teragen.sh
+        envFrom:
+        - configMapRef:
+            name: ozone-client-config
         volumeMounts:
-        - name: java-async-profiler
-          mountPath: /opt/java-async-profiler
+        - name: byteman
+          mountPath: /opt/byteman
+        - name: btm
+          mountPath: /opt/btm
         env:
+        - name: BYTEMAN_HOME
+          value: /opt/byteman
         - name: HADOOP_OPTS
-          value: -agentpath:/opt/java-async-profiler/build/libasyncProfiler.so=start,file=/tmp/profile-%t-%p.svg
+          value: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
       initContainers:
-      - name: java-async-profiler-copy
-        image: elek/java-async-profiler
+      - name: byteman-copy
+        image: elek/byteman
         command:
         - bash
         - -c
-        - cp -r /opt/java-async-profiler/* /tmp/java-async-profiler/
+        - cp -r /tmp/byteman /opt/
         volumeMounts:
-        - name: java-async-profiler
-          mountPath: /tmp/java-async-profiler
+        - name: byteman
+          mountPath: /opt/byteman
       volumes:
-      - name: java-async-profiler
+      - name: byteman
         emptyDir: {}
+      - name: btm
+        configMap:
+          name: btm
+          defaultMode: 493

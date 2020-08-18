@@ -1,0 +1,60 @@
+
+
+
+
+
+
+
+
+
+
+
+
+RULE HB.request
+CLASS org.apache.ratis.grpc.server.GrpcLogAppender
+METHOD sendRequest
+AT ENTRY
+BIND 
+    entriesCount = $proto.getEntriesCount();
+    id = $0.getFollowerId().toString();
+    callId = $1.getCallId()
+IF entriesCount > 0
+DO
+   System.out.println("" + System.currentTimeMillis() + " >> Sending out HB, index=" + $proto.getEntries(entriesCount - 1).getIndex() + "-" + $proto.getEntries(0).getIndex()+", id=" + id +", callId=" + callId)
+ENDRULE
+
+RULE HB.response
+CLASS org.apache.ratis.grpc.server.GrpcLogAppender$AppendLogResponseHandler
+METHOD onNext
+AT ENTRY
+BIND nextIndex = $1.getNextIndex();
+     commit = $1.getFollowerCommit();
+     name = $0.name;
+     callId = $1.getServerReply().getCallId()
+IF TRUE
+DO
+   System.out.println("" + System.currentTimeMillis() + " >> Receiving HB response, nextIndex=" + nextIndex + ", commit=" + commit+", callId="+callId+", name="+name)
+ENDRULE
+
+
+
+
+RULE HddsDispatcher.dispatch.start
+CLASS org.apache.hadoop.ozone.container.common.impl.HddsDispatcher
+METHOD dispatch
+AT ENTRY
+IF TRUE
+DO
+   resetTimer("HddsDispatcher")
+ENDRULE
+
+RULE HddsDispatcher.dispatch.end
+CLASS org.apache.hadoop.ozone.container.common.impl.HddsDispatcher
+METHOD dispatch
+AT EXIT
+BIND name = $1.getCmdType().name();
+     elapsedTime = java.lang.Math.toIntExact(getElapsedTimeFromTimer("HddsDispatcher"))
+IF TRUE
+DO
+   System.out.println("" + System.currentTimeMillis() + " >> Dispatched: " + name +"="+elapsedTime)
+ENDRULE

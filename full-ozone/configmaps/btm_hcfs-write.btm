@@ -29,39 +29,72 @@ DO
   System.out.println("   close.allTime: " + readCounter("close.allTime"));
   System.out.println("   watchForCommit.call: " + readCounter("watchForCommit.call"));
   System.out.println("   watchForCommit.allTime: " + readCounter("watchForCommit.allTime"))
-
 ENDRULE
 
-#RULE WatchRequests.update
-#CLASS org.apache.ratis.server.impl.WatchRequests
-#METHOD update
-#AT ENTRY
-#IF TRUE
-#DO
-#   System.out.println($1);
-#   System.out.println($2)
-#ENDRULE
 
 
-#RULE BlockOutputStream.watchForCommit.Entry
-#CLASS org.apache.hadoop.hdds.scm.storage.BlockOutputStream
-#METHOD watchForCommit
-#AT ENTRY
-#IF TRUE
-#DO resetTimer(Thread.currentThread().getId() + "wc");
-#   incrementCounter("watchForCommit.call")
-#ENDRULE
+RULE WatchRequests.update
+CLASS org.apache.ratis.server.impl.WatchRequests
+METHOD add
+AT ENTRY
+BIND index = $1.getType().getWatch().getIndex()
+IF TRUE
+DO
+   System.out.println("" + System.currentTimeMillis() + " >> New watch request, index=" + index)
+ENDRULE
 
-#RULE BlockOutputStream.watchForCommit.Exit
-#CLASS org.apache.hadoop.hdds.scm.storage.BlockOutputStream
-#METHOD watchForCommit
-#AT EXIT
-#BIND elapsedTime = java.lang.Math.toIntExact(getElapsedTimeFromTimer(Thread.currentThread().getId() + "wc"))
-#IF TRUE
-#DO
-#   incrementCounter("watchForCommit.allTime", elapsedTime)
-#ENDRULE
+RULE WatchRequests.updateIndex
+CLASS org.apache.ratis.server.impl.WatchRequests$WatchQueue
+METHOD updateIndex
+AFTER INVOKE removeExisting
+BIND index = $first.getIndex()
+IF TRUE
+DO
+   System.out.println("" + System.currentTimeMillis() + " >> Completed watch request, index=" + index)
+ENDRULE
 
+RULE CommitWatcher.watchForCommit.before
+CLASS org.apache.hadoop.hdds.scm.storage.CommitWatcher
+METHOD watchForCommit
+AT ENTRY
+BIND index = $1
+IF TRUE
+DO
+   System.out.println("" + System.currentTimeMillis() + " >> Client wfc, index=" + index)
+ENDRULE
+
+
+RULE CommitWatcher.watchForCommit.after
+CLASS org.apache.hadoop.hdds.scm.storage.CommitWatcher
+METHOD watchForCommit
+AFTER INVOKE adjustBuffers
+BIND index = $index
+IF TRUE
+DO
+   System.out.println("" + System.currentTimeMillis() + " >> Client wfc end, index=" + index)
+ENDRULE
+
+
+
+
+RULE BlockOutputStream.watchForCommit.Entry
+CLASS org.apache.hadoop.hdds.scm.storage.BlockOutputStream
+METHOD watchForCommit
+AT ENTRY
+IF TRUE
+DO resetTimer(Thread.currentThread());
+   incrementCounter("watchForCommit.call")
+ENDRULE
+
+RULE BlockOutputStream.watchForCommit.Exit
+CLASS org.apache.hadoop.hdds.scm.storage.BlockOutputStream
+METHOD watchForCommit
+AT EXIT
+BIND elapsedTime = java.lang.Math.toIntExact(getElapsedTimeFromTimer(Thread.currentThread()))
+IF TRUE
+DO
+   incrementCounter("watchForCommit.allTime", elapsedTime)
+ENDRULE
 
 RULE DataOutputStream.Write.Entry
 CLASS ^FSDataOutputStream$PositionCache
