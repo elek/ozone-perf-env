@@ -1,9 +1,10 @@
 source:
-  - url: git::https://github.com/flokkr/docker-ozone.git
+  - url: git::https://github.com/flokkr/docker-ozone.git?ref=dev-0.6.0
   - url: git::https://github.com/elek/docker-byteman
   - url: git::https://github.com/elek/docker-java-async-profiler
   - path: ../flekszible
 import:
+    - path: ozone-client
     - path: ozone
       transformations:
         - type: image
