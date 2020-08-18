@@ -31,8 +31,6 @@ data:
   CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.node-locality-delay: "40"
   CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.queue-mappings: ""
   CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.queue-mappings-override.enable: "false"
+  OZONE-SITE.XML_dfs.ratis.leader.election.minimum.timeout.duration: 100ms
   CORE-SITE.XML_fs.defaultFS: o3fs://bucket1.vol1/
   YARN-SITE.XML_yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage: "100"
-  MAPRED-SITE.XML_mapred.map.java.opts: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
-  MAPRED-SITE.XML_mapred.reduce.java.opts: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
-  MAPRED-SITE.XML_mapred.child.java.opts: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm

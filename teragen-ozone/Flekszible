@@ -10,13 +10,14 @@ import:
     destination: yarn-services
     transformations:
     - type: ozone/ozonefs
-      image: elek/ozone-dev:66d85f303
+      image: elek/ozone-dev:4d293d124
     - type: ozone/client-config
     - type: PublishService
     - type: add
       path:
         - data
       value:
+         OZONE-SITE.XML_dfs.ratis.leader.election.minimum.timeout.duration: 100ms
          CORE-SITE.XML_fs.defaultFS: "o3fs://bucket1.vol1/"
          YARN-SITE.XML_yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage: "100"
   - path: ozone
@@ -25,7 +26,7 @@ import:
     - type: perftest/jvm
     - type: perftest/tuning
     - type: image
-      image: elek/ozone-dev:66d85f303
+      image: elek/ozone-dev:4d293d124
   - path: ozone-client
   - path: job
     destination: tester
@@ -33,7 +34,7 @@ import:
     - type: yarn/config
     - type: ozone/client-config
     - type: ozone/ozonefs
-      image: elek/ozone-dev:66d85f303
+      image: elek/ozone-dev:4d293d124
 transformations:
-   - type: byteman
+#   - type: byteman
 #  - type: java-async-profiler

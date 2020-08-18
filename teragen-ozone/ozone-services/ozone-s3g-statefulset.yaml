@@ -21,41 +21,16 @@ spec:
     spec:
       containers:
       - name: s3g
-        image: elek/ozone-dev:66d85f303
+        image: elek/ozone-dev:4d293d124
         args:
         - ozone
         - s3g
         volumeMounts:
         - name: data
           mountPath: /data
-        - name: byteman
-          mountPath: /opt/byteman
-        - name: btm
-          mountPath: /opt/btm
         envFrom:
         - configMapRef:
             name: ozone-config
-        env:
-        - name: BYTEMAN_HOME
-          value: /opt/byteman
-        - name: HADOOP_OPTS
-          value: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
       volumes:
       - name: data
         emptyDir: {}
-      - name: byteman
-        emptyDir: {}
-      - name: btm
-        configMap:
-          name: btm
-          defaultMode: 493
-      initContainers:
-      - name: byteman-copy
-        image: elek/byteman
-        command:
-        - bash
-        - -c
-        - cp -r /tmp/byteman /opt/
-        volumeMounts:
-        - name: byteman
-          mountPath: /opt/byteman
