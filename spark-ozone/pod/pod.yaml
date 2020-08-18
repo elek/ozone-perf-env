@@ -1,0 +1,8 @@
+apiVersion: v1 
+kind: Pod
+metadata:
+  name: spark-executor
+spec:
+  containers:
+  - image: elek/spark-samples@sha256:d440143e1852998b05472c210441e105cb68f8ba010f69948995cd7ddc009743
+    name: test

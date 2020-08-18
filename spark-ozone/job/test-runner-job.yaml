@@ -10,7 +10,7 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-      - image: flokkr/spark-hadoop3:3.0.0
+      - image: elek/spark-samples@sha256:d440143e1852998b05472c210441e105cb68f8ba010f69948995cd7ddc009743
         name: test
         args:
         - sleep
@@ -18,7 +18,9 @@ spec:
         volumeMounts:
           - mountPath: /opt/testscripts
             name: testscripts
+      restartPolicy: Never
       volumes:
         - name: testscripts
           configMap:
               name: testscripts
+              defaultMode: 0755

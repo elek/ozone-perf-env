@@ -1,9 +1,12 @@
 source:
  - url: git::https://github.com/flokkr/docker-ozone.git?ref=dev-0.6.0
+ - url: git::https://github.com/flokkr/docker-hadoop.git
 import:
+ - path: hdfs
+   destination: hdfs
  - path: ozone-client
  - path: ozone
-   destination: ozone-services
+   destination: ozone
    transformations:
      - type: image
        image: elek/ozone-dev:256db2a74
