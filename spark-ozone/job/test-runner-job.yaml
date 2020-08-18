@@ -4,6 +4,7 @@ kind: Job
 metadata:
   name: test-runner
 spec:
+  backoffLimit: 0
   template:
     metadata:
       name: test-runner
