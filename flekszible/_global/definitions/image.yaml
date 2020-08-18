@@ -1,6 +1,6 @@
 name: perftest/ozoneimage
 parameters:
-  name: image
+    - name: image
 ---
 - type: image
   image: {{.image}}
