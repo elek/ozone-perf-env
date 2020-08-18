@@ -2,7 +2,7 @@
 
 set -x
 
-ROWS=$(numfmt --from=auto --to-unit=100 10G)
+ROWS=$(numfmt --from=auto --to-unit=100 ${TEST_SIZE:-10G})
 MR_EXAMPLES_JAR=/opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.1.jar
 
 for i in `seq 0 0`; do
