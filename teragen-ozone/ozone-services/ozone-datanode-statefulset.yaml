@@ -41,7 +41,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: datanode
-        image: elek/ozone-dev:4d293d124
+        image: flokkr/ozone
         args:
         - ozone
         - datanode

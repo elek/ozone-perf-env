@@ -10,7 +10,6 @@ import:
     destination: yarn-services
     transformations:
     - type: ozone/ozonefs
-      image: elek/ozone-dev:4d293d124
     - type: ozone/client-config
     - type: PublishService
     - type: add
@@ -25,8 +24,6 @@ import:
     transformations:
     - type: perftest/jvm
     - type: perftest/tuning
-    - type: image
-      image: elek/ozone-dev:4d293d124
   - path: ozone-client
   - path: job
     destination: tester
@@ -34,7 +31,6 @@ import:
     - type: yarn/config
     - type: ozone/client-config
     - type: ozone/ozonefs
-      image: elek/ozone-dev:4d293d124
 transformations:
 #   - type: byteman
 #  - type: java-async-profiler
