@@ -30,7 +30,7 @@ jobs:
            sudo mv flekszible /usr/bin/flekszible
       - name: Run test
         env:
-          FLEKSZIBLE_TRANSFORMATION: ozone/image:image=elek/ozone-dev:1.0.0-rc0,ozone/onenode,hdfs/onenode
+          FLEKSZIBLE_TRANSFORMATION: ozone/image:image=elek/ozone-dev:1.0.0-rc0;ozone/onenode;hdfs/onenode
         run: |
           ./${{ matrix.name }}/test.sh
       - run: |
