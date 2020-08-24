@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-runner
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      name: test-runner
+    spec:
+      restartPolicy: Never
+      containers:
+      - image: flokkr/flink
+        name: test
+        args:
+        - sleep
+        - infinity
+        envFrom:
+        - configMapRef:
+            name: flink-config

@@ -1,0 +1,42 @@
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-runner
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      name: test-runner
+    spec:
+      restartPolicy: Never
+      containers:
+      - image: flokkr/flink
+        name: test
+        args:
+        - sleep
+        - infinity
+        envFrom:
+        - configMapRef:
+            name: flink-config
+        - configMapRef:
+            name: ozone-client-config
+        volumeMounts:
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        env:
+        - name: HADOOP_CLASSPATH
+          value: /opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+      initContainers:
+      - name: ozonefscopy
+        image: elek/ozone-dev:45fe4e179
+        command:
+        - bash
+        - -c
+        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop3-*.jar /opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+        volumeMounts:
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+      volumes:
+      - name: ozonefs
+        emptyDir: {}

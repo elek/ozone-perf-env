@@ -1,0 +1,69 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: flink-jobmanager
+  labels:
+    app: flink
+    component: jobmanager
+spec:
+  selector:
+    matchLabels:
+      app: flink
+      component: jobmanager
+  serviceName: flink-jobmanager
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: flink
+        component: jobmanager
+    spec:
+      containers:
+      - name: jobmanager
+        image: flokkr/flink
+        args:
+        - jobmanager.sh
+        - start-foreground
+        envFrom:
+        - configMapRef:
+            name: flink-config
+        - configMapRef:
+            name: ozone-client-config
+        volumeMounts:
+        - name: hadoop
+          mountPath: /opt/hadoop
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        env:
+        - name: HADOOP_CLASSPATH
+          value: /opt/flink/conf:/opt/hadoop/share/hadoop/common/lib/*:/opt/hadoop/share/hadoop/common/*:/opt/hadoop/share/hadoop/hdfs:/opt/hadoop/share/hadoop/hdfs/lib/*:/opt/hadoop/share/hadoop/hdfs/*:/opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+      initContainers:
+      - name: hadoopcopy
+        image: flokkr/hadoop
+        command:
+        - bash
+        - -c
+        - cp -r /opt/hadoop/* /opt/hadoop-dist/
+        volumeMounts:
+        - name: hadoop
+          mountPath: /opt/hadoop-dist
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        envFrom:
+        - configMapRef:
+            name: ozone-client-config
+      - name: ozonefscopy
+        image: elek/ozone-dev:45fe4e179
+        command:
+        - bash
+        - -c
+        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop3-*.jar /opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+        volumeMounts:
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+      volumes:
+      - name: hadoop
+        emptyDir: {}
+      - name: ozonefs
+        emptyDir: {}

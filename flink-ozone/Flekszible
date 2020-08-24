@@ -1,0 +1,45 @@
+source:
+- url: git::https://github.com/flokkr/docker-hadoop.git
+- url: git::https://github.com/flokkr/docker-flink.git
+- url: git::https://github.com/flokkr/docker-ozone.git?ref=dev-0.6.0
+import:
+- path: hadoop
+- path: ozone-client
+- path: flink
+  transformations:
+  - type: hadoop/distribute
+  - type: ozone/client-config
+  - type: ozone/ozonefs
+    image: flokkr/ozone
+  - type: add
+    trigger:
+       metadata:
+          name: flink-config
+    path:
+      - data
+    value:
+      HADOOP_HOME: /opt/hadoop
+  - type: replace
+    trigger:
+      metadata:
+        labels:
+          app: flink
+    path:
+     - spec
+     - template
+     - spec
+     - containers
+     - .*
+     - env
+     - HADOOP_CLASSPATH
+     - value
+    value: /opt/flink/conf:/opt/hadoop/share/hadoop/common/lib/*:/opt/hadoop/share/hadoop/common/*:/opt/hadoop/share/hadoop/hdfs:/opt/hadoop/share/hadoop/hdfs/lib/*:/opt/hadoop/share/hadoop/hdfs/*:/opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+- path: ozone
+- path: job
+  destination: test-runner
+  transformations:
+   - type: ozone/client-config
+   - type: ozone/ozonefs
+     image: flokkr/ozone
+
+

@@ -13,6 +13,7 @@ jobs:
           - chunk-manager-write
           - teragen-ozone
           - chunk-write
+          - flink-ozone
       fail-fast: false
     steps:
       - uses: actions/checkout@v1
