@@ -1,6 +1,6 @@
 source:
 - path: ../flekszible
-- url: github.com/flokkr/docker-ozone
+- url: github.com/flokkr/docker-ozone?ref=dev-0.6.0
 import:
 - path: ozone
   transformations:
@@ -45,6 +45,3 @@ import:
       - args
     value:
       - /opt/test/test.sh
-transformations:
-  - type: image
-    image: elek/ozone-dev:30ec0e2d0
