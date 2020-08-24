@@ -11,6 +11,7 @@ jobs:
         name:
           - datanode-isolated-follower
           - chunk-manager-write
+          - teragen-ozone
       fail-fast: false
     steps:
       - uses: actions/checkout@v1
@@ -28,6 +29,8 @@ jobs:
            chmod +x flekszible
            sudo mv flekszible /usr/bin/flekszible
       - name: Run test
+        env:
+          FLEKSZIBLE_TRANSFORMATION: ozone/image:image=elek/ozone-dev:1.0.0-rc0
         run: |
           ./${{ matrix.name }}/test.sh
       - run: |
