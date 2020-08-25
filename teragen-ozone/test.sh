@@ -10,14 +10,14 @@ source "../testlib.sh"
 
 reset_k8s_env
 
-flekszible generate #-t ozone/onenode
+flekszible generate
 
 kubectl apply -f btm-configmap.yaml
 kubectl apply -f ozone-services
 kubectl apply -f yarn-services
 
-retry grep_log ozone-scm-0 "SCM exiting safe mode."
-retry grep_log ozone-om-0 "HTTP server of ozoneManager listening"
+MAX_RETRY=100 retry grep_log ozone-scm-0 "SCM exiting safe mode."
+MAX_RETRY=100 retry grep_log ozone-om-0 "HTTP server of ozoneManager listening"
 
 kubectl exec ozone-scm-0 -- ozone sh volume create /vol1
 kubectl exec ozone-scm-0 -- ozone sh bucket create /vol1/bucket1
