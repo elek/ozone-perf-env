@@ -12,6 +12,7 @@ jobs:
           - datanode-isolated-follower
           - chunk-manager-write
           - teragen-ozone
+          - chunk-write
       fail-fast: false
     steps:
       - uses: actions/checkout@v1
