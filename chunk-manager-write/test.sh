@@ -15,7 +15,7 @@ flekszible generate
 
 kubectl apply -f .
 
-retry grep_pod_list env
+MAX_RETRY=100 retry grep_pod_list env
 
 kubectl wait pod --timeout=300s --for=condition=Ready -l app=ozone,component=env
 
