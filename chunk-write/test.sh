@@ -11,7 +11,7 @@ source "../testlib.sh"
 
 reset_k8s_env
 
-flekszible generate -t ozone/onenode
+flekszible generate
 
 kubectl apply -f .
 
@@ -19,7 +19,7 @@ retry grep_log ozone-scm-0 "SCM exiting safe mode."
 retry grep_log ozone-om-0 "HTTP server of ozoneManager listening"
 
 kubectl apply -f freon
-   
+
 retry grep_pod_list freon
 
 kubectl wait pod --timeout=300s --for=condition=Ready -l app=ozone,component=freon
