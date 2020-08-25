@@ -1,12 +1,9 @@
 source:
-  - url: github.com/flokkr/docker-ozone
+  - url: github.com/flokkr/docker-ozone?ref=dev-0.6.0
   - path: ..
 import:
     - path: ozone
       transformations:
-         - type: ozone/profiler
-         - type: PublishStatefulSet
-         - type: ozone/devtracing
          - type: perftest/handlerfix
          - type: Change
            path: 
@@ -16,17 +13,7 @@ import:
              metadata:
                 name: ozone-datanode
            replacement: 3
-         - type: Add
-           path:
-             - spec
-           value:
-               podManagementPolicy: Parallel
-           trigger:
-              kind: Statefulset
-              metadata:
-                  name: ozone-datanode
          - type: perftest/memdisk
-         - type: perftest/jvm
     - path: ozone-freon
       destination: freon
       transformations:
@@ -45,11 +32,3 @@ import:
              - --size=10240
              - -t40
              - -n100000
-transformations:
-  - type: Namespace
-  - type: image
-    image: elek/ozone-dev:30ec0e2d0
-    trigger:
-       metadata:
-         labels:
-           app: ozone
