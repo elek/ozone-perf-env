@@ -25,7 +25,7 @@ flekszible generate
 kubectl apply -f ozone-testscript-configmap.yaml
 kubectl apply -f ozone-env-deployment.yaml
 
-kubectl wait --timeout=30s pod --for=condition=Ready -l app=ozone,component=env
+kubectl wait --timeout=300s pod --for=condition=Ready -l app=ozone,component=env
 
 TEST_POD=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' -l component=env)
 
