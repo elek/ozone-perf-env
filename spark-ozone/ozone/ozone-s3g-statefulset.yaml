@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: s3g
-        image: elek/ozone-dev:256db2a74
+        image: elek/ozone-dev:66d85f303
         args:
         - ozone
         - s3g
@@ -34,3 +34,4 @@ spec:
       volumes:
       - name: data
         emptyDir: {}
+      initContainers: []

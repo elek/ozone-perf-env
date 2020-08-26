@@ -54,3 +54,4 @@ spec:
           name: hdfs-config
       - name: data
         emptyDir: {}
+      initContainers: []

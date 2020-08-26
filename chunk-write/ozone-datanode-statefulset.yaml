@@ -41,7 +41,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: datanode
-        image: elek/ozone-dev:30ec0e2d0
+        image: elek/ozone-dev:1.0.0-rc0
         args:
         - ozone
         - datanode
@@ -51,14 +51,8 @@ spec:
         envFrom:
         - configMapRef:
             name: ozone-config
-        env:
-        - name: JAEGER_SAMPLER_TYPE
-          value: probabilistic
-        - name: JAEGER_SAMPLER_PARAM
-          value: "0.01"
-        - name: JAEGER_AGENT_HOST
-          value: jaeger-0.jaeger
       volumes:
       - name: data
         emptyDir:
           medium: Memory
+      initContainers: []

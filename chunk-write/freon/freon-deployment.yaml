@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: ozone
-        image: elek/ozone-dev:30ec0e2d0
+        image: elek/ozone-dev:1.0.0-rc0
         args:
         - ozone
         - freon
@@ -36,3 +36,4 @@ spec:
         envFrom:
         - configMapRef:
             name: ozone-config
+      initContainers: []

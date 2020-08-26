@@ -4,53 +4,43 @@ kind: ConfigMap
 metadata:
   name: testscripts
 data:
-  deltatest.scala: |+
+  deltaread.scala: |-
     import org.apache.spark.sql.{DataFrame, SparkSession}
     import org.apache.spark.sql.functions._
     import org.apache.spark.sql.types.{BinaryType, StringType}
+    import spark.implicits._
+
+    val df: DataFrame = spark.read.format("delta").load("o3fs://bucket1.vol1/location_data")
+    df.show()
+
+    System.out.println(df.count())
+  parquet.sh: "#!/usr/bin/env bash\n\nset -ex\n\n: ${SPARK_HOME:=/opt/spark}\n: ${SOURCE_PATH:=/tmp/qwex}\n:
+    ${DESTINATION_PATH:=/tmp/qwey}\n: ${SAMPLES_DIR:=/opt/}\n\ntime $SPARK_HOME/bin/spark-submit
+    \\\n    --\f\n    --conf spark.executor.memory=4g \\\n    --jars /opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+    \\\n    $SAMPLES_DIR/spark-samples-1.0-SNAPSHOT.jar \\\n    $@\n"
+  deltagenerate.scala: |
+    import org.apache.spark.sql.{DataFrame, SparkSession}
+    import org.apache.spark.sql.functions._
+    import org.apache.spark.sql.types.{BinaryType, StringType}
+    import spark.implicits._
+
+    def randomID: Int = scala.util.Random.nextInt(10) + 1
+    def randomDates: Int = 20200101 + scala.util.Random.nextInt((20200131 - 20200101) + 1)
+    def randomHour: Int = scala.util.Random.nextInt(24)
+    def randomLat: Double = 13.5 + scala.util.Random.nextFloat()
+
+    def randomLong: Double = 100 + scala.util.Random.nextFloat()
 
 
-      def randomID: Int = scala.util.Random.nextInt(10) + 1
+    val df: DataFrame = Seq.fill(100000){(randomID, randomLat, randomLong, randomDates, randomHour)}
+      .toDF("msisdn", "latitude", "longitude", "par_day", "par_hour")
+      .withColumn("msisdn", $"msisdn".cast(StringType))
+      .withColumn("msisdn", sha1($"msisdn".cast(BinaryType)))
+      .select("msisdn", "latitude", "longitude", "par_day", "par_hour")
 
-      def randomDates: Int = 20200101 + scala.util.Random.nextInt((20200131 - 20200101) + 1)
-
-      def randomHour: Int = scala.util.Random.nextInt(24)
-
-      def randomLat: Double = 13.5 + scala.util.Random.nextFloat()
-
-      def randomLong: Double = 100 + scala.util.Random.nextFloat()
-
-        import spark.implicits._
-
-        val df: DataFrame = Seq.fill(100000)
-        {(randomID, randomLat, randomLong, randomDates, randomHour)}
-          .toDF("msisdn", "latitude", "longitude", "par_day", "par_hour")
-          .withColumn("msisdn", $"msisdn".cast(StringType))
-          .withColumn("msisdn", sha1($"msisdn".cast(BinaryType)))
-          .select("msisdn", "latitude", "longitude", "par_day", "par_hour")
-
-        df
-          .repartition(3, $"msisdn")
-          .sortWithinPartitions("latitude", "longitude")
-          .write
-          .partitionBy("par_day", "par_hour")
-          .format("delta")
-          .save("o3fs://bucket1.vol1/location_data")
-
-
-
-  parquet.sh: |
-    #!/usr/bin/env bash
-
-    set -ex
-
-    : ${SPARK_HOME:=/opt/spark}
-    : ${SOURCE_PATH:=/tmp/qwex}
-    : ${DESTINATION_PATH:=/tmp/qwey}
-    : ${SAMPLES_DIR:=/opt/}
-
-    time $SPARK_HOME/bin/spark-submit \
-        --conf spark.executor.memory=4g \
-        --jars /opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar \
-        $SAMPLES_DIR/spark-samples-1.0-SNAPSHOT.jar \
-        $@
+    df.repartition(3, $"msisdn")
+      .sortWithinPartitions("latitude", "longitude")
+      .write
+      .partitionBy("par_day", "par_hour")
+      .format("delta")
+      .save("o3fs://bucket1.vol1/location_data")

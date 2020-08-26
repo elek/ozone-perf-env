@@ -41,7 +41,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: datanode
-        image: elek/ozone-dev:256db2a74
+        image: elek/ozone-dev:66d85f303
         args:
         - ozone
         - datanode
@@ -54,3 +54,4 @@ spec:
       volumes:
       - name: data
         emptyDir: {}
+      initContainers: []

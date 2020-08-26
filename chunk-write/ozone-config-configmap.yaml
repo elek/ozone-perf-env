@@ -20,10 +20,6 @@ data:
   LOG4J.PROPERTIES_log4j.appender.stdout.layout: org.apache.log4j.PatternLayout
   LOG4J.PROPERTIES_log4j.appender.stdout.layout.ConversionPattern: '%d{yyyy-MM-dd
     HH:mm:ss} %-5p %c{1}:%L - %m%n'
-  MAPRED-SITE.XML_mapreduce.application.classpath: /opt/hadoop/share/hadoop/mapreduce/*:/opt/hadoop/share/hadoop/mapreduce/lib/*:/opt/ozonefs/hadoop-ozone-filesystem-lib-current-0.5.0-SNAPSHOT.jar
-  OZONE-SITE.XML_hdds.profiler.endpoint.enabled: "true"
-  ASYNC_PROFILER_HOME: /opt/profiler
+  MAPRED-SITE.XML_mapreduce.application.classpath: /opt/hadoop/share/hadoop/mapreduce/*:/opt/hadoop/share/hadoop/mapreduce/lib/*:/opt/ozonefs/hadoop-ozone-filesystem.jar
   OZONE-SITE.XML_ozone.om.handler.count.key: "250"
   OZONE-SITE.XML_ozone.scm.handler.count.key: "250"
-  HADOOP_OPTS: -server -XX:ParallelGCThreads=8 -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=70
-    -XX:+UseCMSInitiatingOccupancyOnly

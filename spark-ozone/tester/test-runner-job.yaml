@@ -4,6 +4,7 @@ kind: Job
 metadata:
   name: test-runner
 spec:
+  backoffLimit: 0
   template:
     metadata:
       name: test-runner
@@ -35,7 +36,7 @@ spec:
         emptyDir: {}
       initContainers:
       - name: ozonefscopy
-        image: elek/ozone-dev:256db2a74
+        image: elek/ozone-dev:66d85f303
         command:
         - bash
         - -c
