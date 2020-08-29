@@ -6,7 +6,7 @@ metadata:
 data:
   HBASE-SITE.XML_hbase.regionserver.thrift.framed: "false"
   HBASE-SITE.XML_hbase.regionserver.thrift.compact: "true"
-  HBASE-SITE.XML_hbase.rootdir: o3fs://bucket1.vol1/
+  HBASE-SITE.XML_hbase.rootdir: o3fs://bucket1.vol1
   HBASE-SITE.XML_hbase.cluster.distributed: "true"
   HBASE-SITE.XML_hbase.zookeeper.quorum: zookeeper-0.zookeeper
   HBASE-SITE.XML_hbase.regionserver.hostname.disable.master.reversedns: "true"

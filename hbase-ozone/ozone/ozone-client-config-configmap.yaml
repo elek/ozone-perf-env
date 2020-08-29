@@ -9,4 +9,4 @@ data:
   HDFS-SITE.XML_ozone.om.address: ozone-om-0.ozone-om
   OZONE-SITE.XML_ozone.om.address: ozone-om-0.ozone-om
   MAPRED-SITE.XML_mapreduce.application.classpath: /opt/hadoop/share/hadoop/mapreduce/*:/opt/hadoop/share/hadoop/mapreduce/lib/*:/opt/ozonefs/hadoop-ozone-filesystem.jar
-  CORE-SITE.XML_fs.defaultFs: o3fs://bucket1.vol1
+  CORE-SITE.XML_fs.defaultFs: o3fs://bucket1.vol1/

@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: hbase-region
-        image: flokkr/hbase:2.2.4
+        image: flokkr/hbase
         args:
         - hbase
         - regionserver
@@ -47,7 +47,7 @@ spec:
         emptyDir: {}
       initContainers:
       - name: ozonefscopy
-        image: elek/ozone-dev:45fe4e179
+        image: flokkr/ozone
         command:
         - bash
         - -c

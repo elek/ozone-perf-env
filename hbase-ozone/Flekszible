@@ -14,8 +14,7 @@ import:
     path:
       - data
     value:
-      CORE-SITE.XML_fs.defaultFs: o3fs://bucket1.vol1
-- path: ozone-client
+      CORE-SITE.XML_fs.defaultFs: o3fs://bucket1.vol1/
 - path: zookeeper
   transformations:
   - type: image
@@ -23,6 +22,7 @@ import:
 - path: hbase
   transformations:
   - type: ozone/ozonefs
+    hadoop: 2
   - type: ozone/client-config
   - type: add
     path:
@@ -30,6 +30,6 @@ import:
     trigger:
       metadata:
         name: hbase-config
-    value:      
+    value:
       HBASE-SITE.XML_hbase.rootdir: o3fs://bucket1.vol1
       HBASE_CLASSPATH: /opt/ozonefs/hadoop-ozone-filesystem.jar

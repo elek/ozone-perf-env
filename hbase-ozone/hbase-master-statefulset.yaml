@@ -19,14 +19,11 @@ spec:
     spec:
       containers:
       - name: hbase-master
-        image: flokkr/hbase:2.2.4
+        image: flokkr/hbase
         args:
         - hbase
         - master
         - start
-        env:
-        - name: HADOOP_CLASSPATH
-          value: /opt/ozonefs/hadoop-ozone-filesystem.jar
         volumeMounts:
         - name: data
           mountPath: /data
@@ -37,6 +34,9 @@ spec:
             name: hbase-config
         - configMapRef:
             name: ozone-client-config
+        env:
+        - name: HADOOP_CLASSPATH
+          value: /opt/ozonefs/hadoop-ozone-filesystem.jar
       volumes:
       - name: config
         configMap:
@@ -47,7 +47,7 @@ spec:
         emptyDir: {}
       initContainers:
       - name: ozonefscopy
-        image: elek/ozone-dev:45fe4e179
+        image: flokkr/ozone
         command:
         - bash
         - -c
