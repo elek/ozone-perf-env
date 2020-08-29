@@ -4,7 +4,6 @@ source:
   - url: git::https://github.com/elek/docker-java-async-profiler
   - path: ../flekszible
 import:
-    - path: ozone-client
     - path: ozone
       transformations:
         - type: image

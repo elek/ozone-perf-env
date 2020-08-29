@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: ozone
-        image: elek/ozone-dev:1.0.0-rc0
+        image: flokkr/ozone
         args:
         - /opt/test/test.sh
         env: []
@@ -40,4 +40,3 @@ spec:
         configMap:
           name: ozone-testscript
           defaultMode: 493
-      initContainers: []

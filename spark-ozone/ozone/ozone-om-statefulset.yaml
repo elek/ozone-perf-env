@@ -25,7 +25,7 @@ spec:
     spec:
       initContainers:
       - name: init
-        image: elek/ozone-dev:66d85f303
+        image: flokkr/ozone
         args:
         - ozone
         - om
@@ -41,7 +41,7 @@ spec:
             name: ozone-config
       containers:
       - name: om
-        image: elek/ozone-dev:66d85f303
+        image: flokkr/ozone
         args:
         - ozone
         - om

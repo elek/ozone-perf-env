@@ -24,7 +24,6 @@ import:
     transformations:
     - type: perftest/jvm
     - type: perftest/tuning
-  - path: ozone-client
   - path: job
     destination: tester
     transformations:

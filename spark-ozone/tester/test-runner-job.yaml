@@ -26,7 +26,7 @@ spec:
             name: ozone-client-config
         env:
         - name: HADOOP_CLASSPATH
-          value: /opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+          value: /opt/ozonefs/hadoop-ozone-filesystem.jar
       volumes:
       - name: testscripts
         configMap:
@@ -36,11 +36,11 @@ spec:
         emptyDir: {}
       initContainers:
       - name: ozonefscopy
-        image: elek/ozone-dev:66d85f303
+        image: flokkr/ozone
         command:
         - bash
         - -c
-        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop3-*.jar /opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop3-*.jar /opt/ozonefs/hadoop-ozone-filesystem.jar
         volumeMounts:
         - name: ozonefs
           mountPath: /opt/ozonefs

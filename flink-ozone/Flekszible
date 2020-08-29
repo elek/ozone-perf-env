@@ -4,7 +4,6 @@ source:
 - url: git::https://github.com/flokkr/docker-ozone.git?ref=dev-0.6.0
 import:
 - path: hadoop
-- path: ozone-client
 - path: flink
   transformations:
   - type: hadoop/distribute

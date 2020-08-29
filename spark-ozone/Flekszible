@@ -4,7 +4,6 @@ source:
 import:
  - path: hdfs
    destination: hdfs
- - path: ozone-client
  - path: ozone
    destination: ozone
  - path: job

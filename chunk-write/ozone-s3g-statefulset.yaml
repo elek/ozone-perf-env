@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: s3g
-        image: elek/ozone-dev:1.0.0-rc0
+        image: flokkr/ozone
         args:
         - ozone
         - s3g
@@ -35,4 +35,3 @@ spec:
       - name: data
         emptyDir:
           medium: Memory
-      initContainers: []

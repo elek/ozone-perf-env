@@ -2,22 +2,22 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: ozone-datanode
+  name: ozone-isolated-follower
   labels:
     app: ozone
-    component: datanode
+    component: isolated-follower
 spec:
   selector:
     matchLabels:
       app: ozone
-      component: datanode
-  serviceName: ozone-datanode
+      component: isolated-follower
+  serviceName: ozone-isolated-follower
   replicas: 3
   template:
     metadata:
       labels:
         app: ozone
-        component: datanode
+        component: isolated-follower
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9882"
@@ -31,21 +31,32 @@ spec:
               - key: component
                 operator: In
                 values:
-                - datanode
-              - key: app
-                operator: In
-                values:
-                - ozone
+                - isolated-follower
             topologyKey: kubernetes.io/hostname
       securityContext:
         fsGroup: 1000
       containers:
       - name: datanode
-        image: flokkr/ozone
+        image: elek/ozone-dev:a68ed78d9
         args:
-        - ozone
-        - datanode
+        - bash
+        - -c
+        - -x
+        - '''rm -rf /data/storage/hdds && ozone datanode'''
         volumeMounts:
+        - name: data
+          mountPath: /data
+        envFrom:
+        - configMapRef:
+            name: ozone-config
+      - name: freon
+        image: elek/ozone-dev:a68ed78d9
+        args:
+        - /opt/tester/test.sh
+        volumeMounts:
+        - name: script
+          mountPath: /opt/tester/test.sh
+          subPath: test.sh
         - name: data
           mountPath: /data
         envFrom:
@@ -55,3 +66,7 @@ spec:
       - name: data
         emptyDir:
           medium: Memory
+      - name: script
+        configMap:
+          name: ozone-testscript
+          defaultMode: 493
