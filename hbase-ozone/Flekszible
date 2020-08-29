@@ -1,0 +1,35 @@
+source:
+- path: ..
+- url: github.com/flokkr/docker-hbase
+- url: github.com/flokkr/docker-ozone?ref=dev-0.6.0
+- url: github.com/flokkr/docker-zookeeper
+import:
+- path: ozone
+  destination: ozone
+  transformations:
+  - type: add
+    trigger:
+       metadata:
+          name: ozone-client-config
+    path:
+      - data
+    value:
+      CORE-SITE.XML_fs.defaultFs: o3fs://bucket1.vol1
+- path: ozone-client
+- path: zookeeper
+  transformations:
+  - type: image
+    image: flokkr/zookeeper:3.6.1
+- path: hbase
+  transformations:
+  - type: ozone/ozonefs
+  - type: ozone/client-config
+  - type: add
+    path:
+      - data
+    trigger:
+      metadata:
+        name: hbase-config
+    value:      
+      HBASE-SITE.XML_hbase.rootdir: o3fs://bucket1.vol1
+      HBASE_CLASSPATH: /opt/ozonefs/hadoop-ozone-filesystem.jar

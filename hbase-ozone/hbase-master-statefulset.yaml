@@ -1,0 +1,60 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hbase-master
+spec:
+  serviceName: hbase-master
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hbase
+      component: master
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: hbase
+        component: master
+    spec:
+      containers:
+      - name: hbase-master
+        image: flokkr/hbase:2.2.4
+        args:
+        - hbase
+        - master
+        - start
+        env:
+        - name: HADOOP_CLASSPATH
+          value: /opt/ozonefs/hadoop-ozone-filesystem.jar
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        envFrom:
+        - configMapRef:
+            name: hbase-config
+        - configMapRef:
+            name: ozone-client-config
+      volumes:
+      - name: config
+        configMap:
+          name: hbase-config
+      - name: data
+        emptyDir: {}
+      - name: ozonefs
+        emptyDir: {}
+      initContainers:
+      - name: ozonefscopy
+        image: elek/ozone-dev:45fe4e179
+        command:
+        - bash
+        - -c
+        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop2-*.jar /opt/ozonefs/hadoop-ozone-filesystem.jar
+        volumeMounts:
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        envFrom:
+        - configMapRef:
+            name: ozone-client-config

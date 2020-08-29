@@ -1,0 +1,31 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: zookeeper
+spec:
+  serviceName: zookeeper
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: zookeeper
+      component: zookeeper
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+        component: zookeeper
+    spec:
+      containers:
+      - name: zookeeper
+        image: flokkr/zookeeper:3.6.1
+        livenessProbe:
+          tcpSocket:
+            port: 2181
+        envFrom:
+        - configMapRef:
+            name: zookeeper-config
+      initContainers: []

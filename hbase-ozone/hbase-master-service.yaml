@@ -1,0 +1,13 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hbase-master
+spec:
+  ports:
+  - port: 16010
+    name: web
+  clusterIP: None
+  selector:
+    app: hbase
+    component: master
