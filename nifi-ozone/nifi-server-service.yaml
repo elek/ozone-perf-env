@@ -1,0 +1,16 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nifi-server
+  labels:
+    app: nifi
+    component: server
+spec:
+  ports:
+  - port: 8080
+    name: ui
+  clusterIP: None
+  selector:
+    app: nifi
+    component: server

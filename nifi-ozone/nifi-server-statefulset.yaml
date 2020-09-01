@@ -1,0 +1,52 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nifi-server
+  labels:
+    app: nifi
+    component: server
+spec:
+  selector:
+    matchLabels:
+      app: nifi
+      component: server
+  serviceName: nifi-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nifi
+        component: server
+    spec:
+      containers:
+      - name: server
+        image: elek/nifi
+        args:
+        - /opt/nifi/bin/nifi.sh
+        - run
+        volumeMounts:
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        env:
+        - name: HADOOP_CLASSPATH
+          value: /opt/ozonefs/hadoop-ozone-filesystem.jar
+        envFrom:
+        - configMapRef:
+            name: ozone-client-config
+      initContainers:
+      - name: ozonefscopy
+        image: flokkr/ozone
+        command:
+        - bash
+        - -c
+        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop3-*.jar /opt/ozonefs/hadoop-ozone-filesystem.jar
+        volumeMounts:
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        envFrom:
+        - configMapRef:
+            name: ozone-client-config
+      volumes:
+      - name: ozonefs
+        emptyDir: {}

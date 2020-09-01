@@ -1,0 +1,19 @@
+source:
+- url: git::https://github.com/elek/docker-nifi.git
+- url: git::https://github.com/flokkr/docker-ozone.git?ref=dev-0.6.0
+import:
+- path: nifi
+  transformations:
+  - type: ozone/ozonefs
+  - type: ozone/client-config
+- path: ozone
+  destination: ozone
+  transformations:
+  - type: add
+    trigger:
+       metadata:
+          name: ozone-client-config
+    path:
+      - data
+    value:
+       CORE-SITE.XML_fs.defaultFs: o3fs://bucket1.vol1/
