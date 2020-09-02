@@ -37,7 +37,7 @@ spec:
           mountPath: /opt/ozonefs
         env:
         - name: HADOOP_CLASSPATH
-          value: /opt/flink/conf:/opt/hadoop/share/hadoop/common/lib/*:/opt/hadoop/share/hadoop/common/*:/opt/hadoop/share/hadoop/hdfs:/opt/hadoop/share/hadoop/hdfs/lib/*:/opt/hadoop/share/hadoop/hdfs/*:/opt/ozonefs/hadoop-ozone-filesystem-hadoop3.jar
+          value: /opt/flink/conf:/opt/hadoop/share/hadoop/common/lib/*:/opt/hadoop/share/hadoop/common/*:/opt/hadoop/share/hadoop/hdfs:/opt/hadoop/share/hadoop/hdfs/lib/*:/opt/hadoop/share/hadoop/hdfs/*:/opt/ozonefs/hadoop-ozone-filesystem.jar
       initContainers:
       - name: hadoopcopy
         image: flokkr/hadoop

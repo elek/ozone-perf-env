@@ -3,6 +3,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: test-runner
+  labels:
+    app: flink
+    component: test-runner
 spec:
   backoffLimit: 0
   template:
@@ -26,7 +29,7 @@ spec:
           mountPath: /opt/ozonefs
         env:
         - name: HADOOP_CLASSPATH
-          value: /opt/ozonefs/hadoop-ozone-filesystem.jar
+          value: /opt/flink/conf:/opt/hadoop/share/hadoop/common/lib/*:/opt/hadoop/share/hadoop/common/*:/opt/hadoop/share/hadoop/hdfs:/opt/hadoop/share/hadoop/hdfs/lib/*:/opt/hadoop/share/hadoop/hdfs/*:/opt/ozonefs/hadoop-ozone-filesystem.jar
       initContainers:
       - name: ozonefscopy
         image: flokkr/ozone

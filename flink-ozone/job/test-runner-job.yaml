@@ -2,6 +2,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: test-runner
+  labels:
+     app: flink
+     component: test-runner
 spec:
   backoffLimit: 0
   template:
