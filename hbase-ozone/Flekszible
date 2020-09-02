@@ -1,7 +1,7 @@
 source:
 - path: ..
 - url: github.com/flokkr/docker-hbase
-- url: github.com/flokkr/docker-ozone?ref=dev-0.6.0
+- url: github.com/flokkr/docker-ozone
 - url: github.com/flokkr/docker-zookeeper
 import:
 - path: ozone
@@ -31,5 +31,5 @@ import:
       metadata:
         name: hbase-config
     value:
-      HBASE-SITE.XML_hbase.rootdir: o3fs://bucket1.vol1
+      HBASE-SITE.XML_hbase.rootdir: o3fs://bucket1.vol1/
       HBASE_CLASSPATH: /opt/ozonefs/hadoop-ozone-filesystem.jar

@@ -10,7 +10,7 @@ source "../testlib.sh"
 
 reset_k8s_env
 
-# flekszible generate
+flekszible generate
 
 kubectl apply -f ozone
 
