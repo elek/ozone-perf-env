@@ -19,8 +19,12 @@ spec:
         volumeMounts:
         - mountPath: /opt/testscripts
           name: testscripts
+        - mountPath: /opt/btm
+          name: btm
         - name: ozonefs
           mountPath: /opt/ozonefs
+        - name: java-async-profiler
+          mountPath: /opt/java-async-profiler
         envFrom:
         - configMapRef:
             name: ozone-client-config
@@ -32,11 +36,16 @@ spec:
         configMap:
           name: testscripts
           defaultMode: 493
+      - name: btm
+        configMap:
+          name: btm
       - name: ozonefs
+        emptyDir: {}
+      - name: java-async-profiler
         emptyDir: {}
       initContainers:
       - name: ozonefscopy
-        image: flokkr/ozone
+        image: localhost:32482/elek/ozone-dev:bbf5d5e
         command:
         - bash
         - -c
@@ -44,3 +53,14 @@ spec:
         volumeMounts:
         - name: ozonefs
           mountPath: /opt/ozonefs
+        - name: java-async-profiler
+          mountPath: /tmp/java-async-profiler
+      - name: java-async-profiler-copy
+        image: elek/java-async-profiler
+        command:
+        - bash
+        - -c
+        - cp -r /opt/java-async-profiler/* /tmp/java-async-profiler/
+        volumeMounts:
+        - name: java-async-profiler
+          mountPath: /tmp/java-async-profiler

@@ -1,14 +1,54 @@
 source:
  - url: git::https://github.com/flokkr/docker-ozone.git?ref=dev-0.6.0
  - url: git::https://github.com/flokkr/docker-hadoop.git
+ - url: git::https://github.com/elek/docker-java-async-profiler
+ - url: git::https://github.com/elek/docker-byteman
+ - path: ..
 import:
  - path: hdfs
    destination: hdfs
+   transformations:
+   - type: ozone/memdisk
+   - type: add
+     trigger:
+        metadata:
+          name: hdfs-config
+     path:
+       - data
+     value:
+        HDFS-SITE.XML_dfs.checksum.type: "NULL"
  - path: ozone
    destination: ozone
+   transformations:
+   - type: ozone/memdisk
+   - type: add
+     trigger:
+        metadata:
+           name: ozone-client-config
+     path:
+       - data
+     value:
+        OZONE-SITE.XML_ozone.client.checksum.type: NONE
+   - type: add
+     trigger:
+        metadata:
+           name: ozone-config
+     path:
+       - data
+     value:
+        OZONE-SITE.XML_ozone.client.checksum.type: NONE
+   - type: ozone/image
+     image: localhost:32482/elek/ozone-dev:bbf5d5e
+   - type: byteman/install
+#   - type: byteman
+#     script: ratis-no-flush.btm
  - path: job
    destination: tester
    transformations:
+   - type: ozone/image
+     image: localhost:32482/elek/ozone-dev:bbf5d5e
    - type: ozone/client-config
    - type: ozone/ozonefs
-  
+     image: localhost:32482/elek/ozone-dev:bbf5d5e
+   - type: java-async-profiler/install
+#   - type: byteman/install

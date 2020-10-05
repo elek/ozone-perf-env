@@ -19,9 +19,14 @@ spec:
         volumeMounts:
           - mountPath: /opt/testscripts
             name: testscripts
+          - mountPath: /opt/btm
+            name: btm
       restartPolicy: Never
       volumes:
         - name: testscripts
           configMap:
               name: testscripts
               defaultMode: 0755
+        - name: btm
+          configMap:
+             name: btm

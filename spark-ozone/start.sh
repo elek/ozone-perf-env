@@ -12,9 +12,9 @@ reset_k8s_env
 
 flekszible generate
 
+kubectl apply -f btm-configmap.yaml
 kubectl apply -f ozone
 kubectl apply -f hdfs
-
 
 retry grep_log ozone-scm-0 "SCM exiting safe mode."
 retry grep_log ozone-om-0 "HTTP server of ozoneManager listening"

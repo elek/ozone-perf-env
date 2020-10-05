@@ -3,6 +3,9 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: hdfs-namenode
+  labels:
+    app: hdfs
+    component: namenode
 spec:
   serviceName: hdfs-namenode
   replicas: 1
@@ -48,4 +51,5 @@ spec:
           mountPath: /data
       volumes:
       - name: data
-        emptyDir: {}
+        emptyDir:
+          medium: Memory

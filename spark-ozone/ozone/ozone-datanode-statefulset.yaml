@@ -41,16 +41,34 @@ spec:
         fsGroup: 1000
       containers:
       - name: datanode
-        image: flokkr/ozone
+        image: localhost:32482/elek/ozone-dev:bbf5d5e
         args:
         - ozone
         - datanode
         volumeMounts:
         - name: data
           mountPath: /data
+        - name: byteman
+          mountPath: /opt/byteman
         envFrom:
         - configMapRef:
             name: ozone-config
+        env:
+        - name: BYTEMAN_HOME
+          value: /opt/byteman
       volumes:
       - name: data
+        emptyDir:
+          medium: Memory
+      - name: byteman
         emptyDir: {}
+      initContainers:
+      - name: byteman-copy
+        image: elek/byteman
+        command:
+        - bash
+        - -c
+        - cp -r /tmp/byteman /opt/
+        volumeMounts:
+        - name: byteman
+          mountPath: /opt/byteman

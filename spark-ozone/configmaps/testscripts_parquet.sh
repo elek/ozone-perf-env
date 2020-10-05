@@ -8,7 +8,6 @@ set -ex
 
 
 #--conf "spark.driver.extraJavaOptions=-javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/$BTM_SCRIPT" \
-#-agentpath:/opt/java-async-profiler/build/libasyncProfiler.so=start,file=/tmp/profile-%t-%p.svg
 time $SPARK_HOME/bin/spark-submit \
     --conf spark.executor.memory=4g \
     --conf "spark.driver.extraJavaOptions=-agentpath:/opt/java-async-profiler/build/libasyncProfiler.so=start,file=/tmp/profile-%t-%p.svg" \
