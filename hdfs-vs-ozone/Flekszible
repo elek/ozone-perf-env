@@ -1,0 +1,64 @@
+source:
+ - url: git::https://github.com/flokkr/docker-ozone.git
+ - url: git::https://github.com/flokkr/docker-hadoop.git
+ - url: git::https://github.com/elek/docker-java-async-profiler
+ - url: git::https://github.com/elek/docker-byteman
+ - path: ..
+import:
+ - path: hdfs
+   transformations:
+   - type: ozone/memdisk
+   - type: add
+     trigger:
+        metadata:
+          name: hdfs-config
+     path:
+       - data
+     value:
+        HDFS-SITE.XML_dfs.checksum.type: "NULL"
+ - path: ozone
+   transformations:
+   - type: ozone/memdisk
+   - type: add
+     trigger:
+        metadata:
+           name: ozone-client-config
+     path:
+       - data
+     value:
+        OZONE-SITE.XML_ozone.client.checksum.type: NONE
+   - type: add
+     trigger:
+        metadata:
+           name: ozone-config
+     path:
+       - data
+     value:
+        OZONE-SITE.XML_ozone.client.checksum.type: NONE
+   - type: add
+     trigger:
+        metadata:
+           name: ozone-client-config
+     path:
+        - data
+     value:      
+        LOG4J.PROPERTIES_log4j.rootLogger: INFO, stdout
+        LOG4J.PROPERTIES_log4j.logger.org.apache.hadoop.hdfs.protocol.datatransfer.sasl: WARN
+        LOG4J.PROPERTIES_log4j.appender.stdout: org.apache.log4j.ConsoleAppender
+        LOG4J.PROPERTIES_log4j.appender.stdout.layout: org.apache.log4j.PatternLayout
+        LOG4J.PROPERTIES_log4j.appender.stdout.layout.ConversionPattern: '%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n'
+   - type: ozone/image
+     image: localhost:32482/elek/ozone-dev:bbf5d5e
+   - type: byteman/install
+#   - type: byteman
+#     script: ratis-no-flush.btm
+ - path: job
+   destination: tester
+   transformations:
+   - type: ozone/image
+     image: localhost:32482/elek/ozone-dev:bbf5d5e
+   - type: ozone/client-config
+   - type: ozone/ozonefs
+     image: localhost:32482/elek/ozone-dev:bbf5d5e
+   - type: java-async-profiler/install
+   - type: byteman/install

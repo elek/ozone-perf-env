@@ -3,6 +3,9 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: hdfs-namenode
+  labels:
+    app: hdfs
+    component: namenode
 spec:
   serviceName: hdfs-namenode
   replicas: 1
@@ -34,17 +37,6 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
-        - name: byteman
-          mountPath: /opt/byteman
-      - name: byteman-copy
-        image: elek/byteman
-        command:
-        - bash
-        - -c
-        - cp -r /tmp/byteman /opt/
-        volumeMounts:
-        - name: byteman
-          mountPath: /opt/byteman
       containers:
       - name: hdfs-namenode
         image: flokkr/hadoop
@@ -57,21 +49,7 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
-        - name: byteman
-          mountPath: /opt/byteman
-        - name: btm
-          mountPath: /opt/btm
-        env:
-        - name: BYTEMAN_HOME
-          value: /opt/byteman
-        - name: HADOOP_OPTS
-          value: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/btm/hcfs-write.btm
       volumes:
       - name: data
-        emptyDir: {}
-      - name: byteman
-        emptyDir: {}
-      - name: btm
-        configMap:
-          name: btm
-          defaultMode: 493
+        emptyDir:
+          medium: Memory

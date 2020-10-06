@@ -1,0 +1,84 @@
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-freon
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      name: test-freon
+    spec:
+      restartPolicy: Never
+      containers:
+      - image: localhost:32482/elek/ozone-dev:bbf5d5e
+        name: test
+        args:
+        - /opt/testscripts/freon.sh
+        volumeMounts:
+        - mountPath: /opt/testscripts
+          name: testscripts
+        - mountPath: /opt/btm
+          name: btm
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        - name: java-async-profiler
+          mountPath: /opt/java-async-profiler
+        - name: byteman
+          mountPath: /opt/byteman
+        envFrom:
+        - configMapRef:
+            name: ozone-client-config
+        env:
+        - name: HADOOP_CLASSPATH
+          value: /opt/ozonefs/hadoop-ozone-filesystem.jar
+        - name: BYTEMAN_HOME
+          value: /opt/byteman
+      volumes:
+      - name: testscripts
+        configMap:
+          name: testscripts
+          defaultMode: 493
+      - name: btm
+        configMap:
+          name: btm
+      - name: ozonefs
+        emptyDir: {}
+      - name: java-async-profiler
+        emptyDir: {}
+      - name: byteman
+        emptyDir: {}
+      initContainers:
+      - name: ozonefscopy
+        image: localhost:32482/elek/ozone-dev:bbf5d5e
+        command:
+        - bash
+        - -c
+        - cp share/ozone/lib/hadoop-ozone-filesystem-hadoop3-*.jar /opt/ozonefs/hadoop-ozone-filesystem.jar
+        volumeMounts:
+        - name: ozonefs
+          mountPath: /opt/ozonefs
+        - name: java-async-profiler
+          mountPath: /tmp/java-async-profiler
+        - name: byteman
+          mountPath: /opt/byteman
+      - name: java-async-profiler-copy
+        image: elek/java-async-profiler
+        command:
+        - bash
+        - -c
+        - cp -r /opt/java-async-profiler/* /tmp/java-async-profiler/
+        volumeMounts:
+        - name: java-async-profiler
+          mountPath: /tmp/java-async-profiler
+        - name: byteman
+          mountPath: /opt/byteman
+      - name: byteman-copy
+        image: elek/byteman
+        command:
+        - bash
+        - -c
+        - cp -r /tmp/byteman /opt/
+        volumeMounts:
+        - name: byteman
+          mountPath: /opt/byteman

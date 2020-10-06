@@ -4,6 +4,141 @@ kind: ConfigMap
 metadata:
   name: btm
 data:
+  ratis-flush.btm: "# Licensed to the Apache Software Foundation (ASF) under one or
+    more\n# contributor license agreements.  See the NOTICE file distributed with\n#
+    this work for additional information regarding copyright ownership.\n# The ASF
+    licenses this file to You under the Apache License, Version 2.0\n# (the \"License\");
+    you may not use this file except in compliance with\n# the License.  You may obtain
+    a copy of the License at\n#\n#     http://www.apache.org/licenses/LICENSE-2.0\n#\n#
+    Unless required by applicable law or agreed to in writing, software\n# distributed
+    under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES
+    OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the
+    specific language governing permissions and\n# limitations under the License.\n\n#
+    Turn of flush for Raits log\n\n\nRULE SegmentedRaftLogOutputStream.flush.Entry\nCLASS
+    org.apache.ratis.server.raftlog.segmented.SegmentedRaftLogOutputStream\nMETHOD
+    flush\nAT ENTRY\nIF TRUE\nDO resetTimer(\"flush\" + Thread.currentThread().getId());\n\nENDRULE\n\nRULE
+    SegmentedRaftLogOutputStream.flush.Exit\nCLASS org.apache.ratis.server.raftlog.segmented.SegmentedRaftLogOutputStream\nMETHOD
+    flush\nAT EXIT\nBIND elapsedTime = java.lang.Math.toIntExact(getElapsedTimeFromTimer(\"flush\"
+    + Thread.currentThread().getId()))\nDO \n   System.out.println(\"flush: \" + elapsedTime);\nENDRULE"
+  ratis-no-flush.btm: "# Licensed to the Apache Software Foundation (ASF) under one
+    or more\n# contributor license agreements.  See the NOTICE file distributed with\n#
+    this work for additional information regarding copyright ownership.\n# The ASF
+    licenses this file to You under the Apache License, Version 2.0\n# (the \"License\");
+    you may not use this file except in compliance with\n# the License.  You may obtain
+    a copy of the License at\n#\n#     http://www.apache.org/licenses/LICENSE-2.0\n#\n#
+    Unless required by applicable law or agreed to in writing, software\n# distributed
+    under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES
+    OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the
+    specific language governing permissions and\n# limitations under the License.\n\n\nRULE
+    Ratis.noFlush\nCLASS org.apache.ratis.server.raftlog.segmented.SegmentedRaftLogOutputStream\nMETHOD
+    flush\nAT ENTRY\nIF TRUE\nDO \n   return\nENDRULE"
+  watchforcommit.btm: "# Licensed to the Apache Software Foundation (ASF) under one
+    or more\n# contributor license agreements.  See the NOTICE file distributed with\n#
+    this work for additional information regarding copyright ownership.\n# The ASF
+    licenses this file to You under the Apache License, Version 2.0\n# (the \"License\");
+    you may not use this file except in compliance with\n# the License.  You may obtain
+    a copy of the License at\n#\n#     http://www.apache.org/licenses/LICENSE-2.0\n#\n#
+    Unless required by applicable law or agreed to in writing, software\n# distributed
+    under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES
+    OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the
+    specific language governing permissions and\n# limitations under the License.\n\n#
+    Measure time spent in Watch for commit calls\n\nRULE BlockOutputStream.watchForCommit.Entry\nCLASS
+    org.apache.hadoop.hdds.scm.storage.BlockOutputStream\nMETHOD watchForCommit\nAT
+    ENTRY\nIF TRUE\nDO resetTimer(\"watchForCommit\" + Thread.currentThread().getId());\n\nENDRULE\n\nRULE
+    BlockOutputStream.watchForCommit.Exit\nCLASS org.apache.hadoop.hdds.scm.storage.BlockOutputStream\nMETHOD
+    watchForCommit\nAT EXIT\nBIND elapsedTime = java.lang.Math.toIntExact(getElapsedTimeFromTimer(\"watchForCommit\"
+    + Thread.currentThread().getId()))\nIF elapsedTime > 5\nDO \n   System.out.println(\"WatchForCommit:
+    \" + elapsedTime);\nENDRULE"
+  watchforcommit_all.btm: |-
+    # Licensed to the Apache Software Foundation (ASF) under one or more
+    # contributor license agreements.  See the NOTICE file distributed with
+    # this work for additional information regarding copyright ownership.
+    # The ASF licenses this file to You under the Apache License, Version 2.0
+    # (the "License"); you may not use this file except in compliance with
+    # the License.  You may obtain a copy of the License at
+    #
+    #     http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+
+    # Measure overall time spent in Watch for commit calls
+
+    RULE FileSystem.close
+    CLASS org.apache.hadoop.fs.FileSystem
+    METHOD close
+    IF TRUE
+    DO
+      System.out.println("Closing file system instance: " + System.identityHashCode($0));
+      System.out.println("   watchForCommit.call: " + readCounter("watchForCommit.call"));
+      System.out.println("   watchForCommit.allTime: " + readCounter("watchForCommit.allTime"))
+
+    ENDRULE
+
+    RULE BlockOutputStream.watchForCommit.Entry
+    CLASS org.apache.hadoop.hdds.scm.storage.BlockOutputStream
+    METHOD watchForCommit
+    AT ENTRY
+    IF TRUE
+    DO resetTimer(Thread.currentThread());
+       incrementCounter("watchForCommit.call")
+    ENDRULE
+
+    RULE BlockOutputStream.watchForCommit.Exit
+    CLASS org.apache.hadoop.hdds.scm.storage.BlockOutputStream
+    METHOD watchForCommit
+    AT EXIT
+    BIND elapsedTime = java.lang.Math.toIntExact(getElapsedTimeFromTimer(Thread.currentThread()))
+    IF TRUE
+    DO
+       System.out.println("watchForCommit: " + elapsedTime);
+       incrementCounter("watchForCommit.allTime", elapsedTime)
+    ENDRULE
+  appendlog.btm: "# Licensed to the Apache Software Foundation (ASF) under one or
+    more\n# contributor license agreements.  See the NOTICE file distributed with\n#
+    this work for additional information regarding copyright ownership.\n# The ASF
+    licenses this file to You under the Apache License, Version 2.0\n# (the \"License\");
+    you may not use this file except in compliance with\n# the License.  You may obtain
+    a copy of the License at\n#\n#     http://www.apache.org/licenses/LICENSE-2.0\n#\n#
+    Unless required by applicable law or agreed to in writing, software\n# distributed
+    under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES
+    OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the
+    specific language governing permissions and\n# limitations under the License.\n\n\n#Measure
+    time between GrpcLogAppender.appendLog calls (HB frequency)\n\nRULE GrpcLogAppender.appendLog\nCLASS
+    GrpcLogAppender\nMETHOD appendLog\nAT ENTRY\nBIND elapsedTime = java.lang.Math.toIntExact(getElapsedTimeFromTimer(\"appendLog\"
+    + Thread.currentThread().getId()))\nIF TRUE\nDO \n   System.out.println(\"appendLog:
+    \" + elapsedTime);\n   resetTimer(\"appendLog\" + Thread.currentThread().getId());\nENDRULE"
+  hcfs-read.btm: "# Licensed to the Apache Software Foundation (ASF) under one or
+    more\n# contributor license agreements.  See the NOTICE file distributed with\n#
+    this work for additional information regarding copyright ownership.\n# The ASF
+    licenses this file to You under the Apache License, Version 2.0\n# (the \"License\");
+    you may not use this file except in compliance with\n# the License.  You may obtain
+    a copy of the License at\n#\n#     http://www.apache.org/licenses/LICENSE-2.0\n#\n#
+    Unless required by applicable law or agreed to in writing, software\n# distributed
+    under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES
+    OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the
+    specific language governing permissions and\n# limitations under the License.\n\n#
+    Measure time spent in HCFS read implementations\n\nRULE FileSystem.close\nCLASS
+    org.apache.hadoop.fs.FileSystem\nMETHOD close\nIF TRUE\nDO\n  System.out.println(\"Closing
+    file system instance: \" + System.identityHashCode($0));\n  System.out.println(\"
+    \  read.call: \" + readCounter(\"read.call\"));\n  System.out.println(\"   read.allTime:
+    \" + readCounter(\"read.allTime\"));\n  System.out.println(\"   readFully.call:
+    \" + readCounter(\"readFully.call\"));\n  System.out.println(\"   readFully.allTime:
+    \" + readCounter(\"readFully.allTime\"));  \nENDRULE\n\n\nRULE FSDataInputStream.Read.Entry\nCLASS
+    org.apache.hadoop.fs.FSDataInputStream\nMETHOD read\nAT ENTRY\nIF TRUE\nDO resetTimer(\"read\"
+    + Thread.currentThread().getId());\n   incrementCounter(\"read.call\")\nENDRULE\n\nRULE
+    FSDataInputStream.Read.Exit\nCLASS org.apache.hadoop.fs.FSDataInputStream\nMETHOD
+    read\nAT EXIT\nBIND elapsedTime = java.lang.Math.toIntExact(getElapsedTimeFromTimer(\"read\"
+    + Thread.currentThread().getId()))\nIF TRUE\nDO\n   incrementCounter(\"read.allTime\",
+    elapsedTime)\nENDRULE\n\nRULE FSDataInputStream.ReadFully.Entry\nCLASS org.apache.hadoop.fs.FSDataInputStream\nMETHOD
+    read\nAT ENTRY\nIF TRUE\nDO resetTimer(\"readFully\" + Thread.currentThread().getId());\n
+    \  incrementCounter(\"readFully.call\")\nENDRULE\n\nRULE FSDataInputStream.ReadFully.Exit\nCLASS
+    org.apache.hadoop.fs.FSDataInputStream\nMETHOD read\nAT EXIT\nBIND elapsedTime
+    = java.lang.Math.toIntExact(getElapsedTimeFromTimer(\"readFully\" + Thread.currentThread().getId()))\nIF
+    TRUE\nDO\n   incrementCounter(\"readFully.allTime\", elapsedTime)\nENDRULE\n"
   hcfs-write.btm: |
     # Licensed to the Apache Software Foundation (ASF) under one or more
     # contributor license agreements.  See the NOTICE file distributed with
@@ -20,6 +155,8 @@ data:
     # See the License for the specific language governing permissions and
     # limitations under the License.
 
+    # Measure time spent in HCFS write implementations
+
     RULE FileSystem.close
     CLASS org.apache.hadoop.fs.FileSystem
     METHOD close
@@ -34,9 +171,8 @@ data:
       System.out.println("   hflush.allTime: " + readCounter("hflush.allTime"));
       System.out.println("   close.call: " + readCounter("close.call"));
       System.out.println("   close.allTime: " + readCounter("close.allTime"))
-
-
     ENDRULE
+
 
     RULE DataOutputStream.Write.Entry
     CLASS ^FSDataOutputStream$PositionCache

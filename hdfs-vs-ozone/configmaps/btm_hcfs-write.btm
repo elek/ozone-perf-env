@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Measure time spent in HCFS write implementations
+
 RULE FileSystem.close
 CLASS org.apache.hadoop.fs.FileSystem
 METHOD close
@@ -27,9 +29,8 @@ DO
   System.out.println("   hflush.allTime: " + readCounter("hflush.allTime"));
   System.out.println("   close.call: " + readCounter("close.call"));
   System.out.println("   close.allTime: " + readCounter("close.allTime"))
-
-
 ENDRULE
+
 
 RULE DataOutputStream.Write.Entry
 CLASS ^FSDataOutputStream$PositionCache

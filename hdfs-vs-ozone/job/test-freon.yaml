@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-freon
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      name: test-freon
+    spec:
+      restartPolicy: Never
+      containers:
+      - image: localhost:32482/elek/ozone-dev:bbf5d5e
+        name: test
+        args:
+        - /opt/testscripts/freon.sh
+        volumeMounts:
+          - mountPath: /opt/testscripts
+            name: testscripts
+          - mountPath: /opt/btm
+            name: btm
+      restartPolicy: Never
+      volumes:
+        - name: testscripts
+          configMap:
+              name: testscripts
+              defaultMode: 0755
+        - name: btm
+          configMap:
+             name: btm
