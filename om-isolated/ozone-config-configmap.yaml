@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   name: ozone-config
 data:
-  HADOOP_OPTS: -javaagent:/tmp/byteman/lib/byteman.jar=script:/tmp/mock-scm.btm,boot:/tmp/byteman/lib/byteman.jar
+  HADOOP_OPTS: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/ozone/share/ozone/byteman/mock-scm.btm,boot:/opt/byteman/lib/byteman.jar
     -Dorg.jboss.byteman.transform.all
   OZONE-SITE.XML_ozone.scm.datanode.id.dir: /data
   OZONE-SITE.XML_ozone.metadata.dirs: /data/metadata
@@ -19,6 +19,5 @@ data:
     HH:mm:ss} %-5p %c{1}:%L - %m%n'
   OZONE-SITE.XML_hdds.profiler.endpoint.enabled: "true"
   ASYNC_PROFILER_HOME: /opt/profiler
-  OZONE-SITE.XML_ozone.metastore.rocksdb.statistics: ALL
   OZONE-SITE.XML_ozone.om.handler.count.key: "250"
   OZONE-SITE.XML_ozone.scm.handler.count.key: "250"

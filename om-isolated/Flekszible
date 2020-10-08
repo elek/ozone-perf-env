@@ -1,15 +1,17 @@
 source:
   - path: ../flekszible
   - url: git::https://github.com/flokkr/docker-ozone.git
+  - url: git::https://github.com/elek/docker-byteman
 transformations:
-  - type: add
-    trigger:
-       metadata:
-          name: ozone-config
-    path:
-      - data
-    value:
-       OZONE-SITE.XML_ozone.metastore.rocksdb.statistics: "ALL"
+#  - type: add
+#    trigger:
+#       metadata:
+#          name: ozone-config
+#    path:
+#      - data
+#    value:
+#       OZONE-SITE.XML_ozone.metastore.rocksdb.statistics: "ALL"
   - type: image
-    image: localhost:30510/elek/ozone-dev:b36a738
+    image: localhost:32482/elek/ozone-dev:bbf5d5e
   - type: perftest/handlerfix
+  - type: byteman/install

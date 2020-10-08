@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: ozone-config
 data:
-  HADOOP_OPTS: -javaagent:/tmp/byteman/lib/byteman.jar=script:/tmp/mock-scm.btm,boot:/tmp/byteman/lib/byteman.jar -Dorg.jboss.byteman.transform.all
+  HADOOP_OPTS: -javaagent:/opt/byteman/lib/byteman.jar=script:/opt/ozone/share/ozone/byteman/mock-scm.btm,boot:/opt/byteman/lib/byteman.jar -Dorg.jboss.byteman.transform.all
   OZONE-SITE.XML_ozone.scm.datanode.id.dir: /data
   OZONE-SITE.XML_ozone.metadata.dirs: /data/metadata
   OZONE-SITE.XML_ozone.scm.block.client.address: ozone-scm-0.ozone-scm
